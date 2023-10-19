@@ -2,6 +2,7 @@
 # Assume that pyjaspar, biopython are already installed
 from pyjaspar import jaspardb
 from Bio import motifs
+from Bio.motifs import Motif
 import random
 
 class DNABindingMotifs(object):
@@ -81,8 +82,8 @@ class DNABindingMotifs(object):
     for db in self.dbs:
       cluster = {}
       for motif in db:
-        sequence.append((motif.matrix_id, motif.counts))
-        cluster[motif.matrix_id] = motif.counts
+        sequence.append((motif.matrix_id, Motif(counts=motif.counts)))
+        cluster[motif.matrix_id] = Motif(counts=motif.counts)
       correct_clustering.append(cluster)
     # shuffle the order of the map by first creating a list and then shuffle it 
     random.shuffle(sequence)
@@ -95,3 +96,9 @@ class DNABindingMotifs(object):
     self.mmm = mmm
     self.cc = correct_clustering
     return
+
+
+# code for checking the objects
+#db = DNABindingMotifs()
+#sth = db.mmm[list(db.mmm.keys())[0]]
+#print(sth.consensus,sth.counts)
