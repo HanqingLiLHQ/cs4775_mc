@@ -14,7 +14,7 @@ class DNABindingMotifs(object):
     total_cluster_count: the amount of clusters an algorithm should give 
     mmm: motif -> matrix, (motif matrix map), this would be used as input for most clustering algorithms
     cc: correct clustering results, denoted by a list containing several maps. Each map is a motif -> matrix map
-      showing an original cluster in jaspar dataset. This will be used for the evaluation rubrics.
+      denoting an original cluster in jaspar dataset. This will be used for the evaluation rubrics.
   """
   def __init__(self):
     self._fetch_data()
@@ -98,7 +98,11 @@ class DNABindingMotifs(object):
     return
 
 
-# code for checking the objects
 #db = DNABindingMotifs()
-#sth = db.mmm[list(db.mmm.keys())[0]]
-#print(sth.consensus,sth.counts)
+#sth1 = db.mmm[list(db.mmm.keys())[0]]
+#sth2 = db.mmm[list(db.mmm.keys())[0]]
+#print(sth1.pssm)
+#sth1.pseudocounts = motifs.jaspar.calculate_pseudocounts(sth1)
+#sth2.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
+#print(sth1.pssm)
+#print(sth1.pssm.dist_pearson(sth2.pssm))
