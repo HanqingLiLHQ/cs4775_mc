@@ -1,6 +1,3 @@
-import sys
-sys.path.insert(1,'../../dataset')
-import dbm
 from Bio import motifs
 
 
@@ -9,11 +6,7 @@ from Bio import motifs
 Return a motif-to-motif distance matrix as a 2D list, with a 1D list composed of motif ids 
 to indicate the motif's order in the distance matrix
 """
-def calculate_distance_matrix():
-  # gather the dataset, currently using the DNABindingMotifs dataset
-  dataset = dbm.DNABindingMotifs()
-  # gather the cluster
-
+def calculate_distance_matrix(dataset):
   mmm = dataset.mmm
   motif_ids = list(mmm.keys())
 
