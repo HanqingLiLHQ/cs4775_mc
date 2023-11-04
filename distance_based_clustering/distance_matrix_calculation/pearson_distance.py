@@ -47,3 +47,4 @@ def calculate_distance_matrix(dataset):
 # normalize them by the total amount of grids (total alignment length * possible bases)
 # PCC = (sxy - sx * sy) / root((sxx - sx * sx) (syy - sy * sy))
 # which is just: PCC = Cov(mx, my)/ root(Var(x) * Var(y))
+# https://github.com/biopython/biopython/blob/master/Bio/motifs/matrix.py#L488
