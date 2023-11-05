@@ -11,16 +11,12 @@ dataset = dataset_yeast_core.DNABindingMotifs()
 # where each motif matrix can be retrieved by motif.pssm
 print(dataset.mmm)
 print("Finish printing dataset \n")
+dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
+# dm is distance matrix
+# idlist is motif's order in the distance matrix
+
 
 # Hierarchical clustering
-dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
-# # distance matrix
-# print(dm)
-# print("Finish printing distance matrix \n")
-# # motif's order in the distance matrix
-# print(idlist)
-# print("Finish printing idlist \n")
-
 # clusters = hierarchical_clustering.hierarchical_clustering(5, dm, idlist)
 # # resulting cluters after using clustering method
 # print(clusters)
@@ -28,6 +24,7 @@ dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
 
 
 # K-means clustering
+# One advantage of K-means is it can customize number of clusters needed
 num_clusters = 3  # Define the number of clusters
 clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 print(clusters)

@@ -19,7 +19,8 @@ def assign_clusters(centroids_indices, dm):
 def find_new_centroids(clusters, dm):
     new_centroids_indices = []
     for cluster in clusters:
-        # Find the motif in the cluster that has the minimum average distance to all other motifs in the cluster
+        # Find the motif in the cluster that has the minimum average 
+        # distance to all other motifs in the cluster
         if cluster:
             min_avg_distance = float('inf')
             centroid_index = None

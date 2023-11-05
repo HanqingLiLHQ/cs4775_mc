@@ -2,6 +2,8 @@ import random
 from sklearn.cluster import KMeans
 import numpy as np
 
+### This doesn't work because KMeans in numpy does not allow self-defined distances
+# Just here for future referral, delete later
 
 def kmeans_clustering(dataset, dm, id_list):
     motifs_map = dataset.mmm
