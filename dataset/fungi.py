@@ -586,6 +586,7 @@ class DNABindingMotifs(object):
     
     self.total_cluster_count=65
     self.total_motif_count=total_count
+    print(str(total_count)+"motifs have been fetched.")
     self.dbs=motifs_fetched
     return
   
@@ -631,11 +632,11 @@ class DNABindingMotifs(object):
     return
 
 
-db = DNABindingMotifs()
-sth1 = db.mmm[list(db.mmm.keys())[0]]
-sth2 = db.mmm[list(db.mmm.keys())[0]]
-print(sth1.pssm)
-sth1.pseudocounts = motifs.jaspar.calculate_pseudocounts(sth1)
-sth2.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
-print(sth1.pssm)
-print(sth1.pssm.dist_pearson(sth2.pssm))
+# db = DNABindingMotifs()
+# sth1 = db.mmm[list(db.mmm.keys())[0]]
+# sth2 = db.mmm[list(db.mmm.keys())[0]]
+# print(sth1.pssm)
+# sth1.pseudocounts = motifs.jaspar.calculate_pseudocounts(sth1)
+# sth2.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
+# print(sth1.pssm)
+# print(sth1.pssm.dist_pearson(sth2.pssm))
