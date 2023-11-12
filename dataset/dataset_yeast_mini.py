@@ -29,32 +29,49 @@ class DNABindingMotifs(object):
     print("This program runs on database: " + jdb.release)
     # fetch: yeast, Saccharomyces cerevisiae bZIP, bHLH
     # bHLH, bHSH, leucine zippers, homeodomain, and zinc finger factors are fetched.
-    bHLH_db_s_cerevisiae = jdb.fetch_motifs(collection="core", tax_group=['fungi'],\
-                                        species=4932, tf_class="Basic helix-loop-helix factors (bHLH)")
-    print("fetched " + str(len(bHLH_db_s_cerevisiae)) + " motifs from Basic helix-loop-helix factors (bHLH)")
+    bHLH_s_cerevisiae_ABF1_1 = jdb.fetch_motif_by_id("MA0265.1")
+    print("fetched first form of a bHLH motif ABF1" )
+          
+    bHLH_s_cerevisiae_ABF1_2 = jdb.fetch_motif_by_id("MA0265.2")
+    print("fetched second form of a bHLH motif ABF1" )
 
-    bHSH_db_s_cerevisiae = jdb.fetch_motifs(collection="core", tax_group=['fungi'],\
-                                        species=4932, tf_class="Basic helix-span-helix factors (bHSH)")
-    print("fetched " + str(len(bHSH_db_s_cerevisiae)) + " motifs from Basic helix-span-helix factors (bHSH)")
+    bHLH_db_s_cerevisiae=[bHLH_s_cerevisiae_ABF1_1, bHLH_s_cerevisiae_ABF1_2]
 
-    bZIP_db_s_cerevisiae = jdb.fetch_motifs(collection="core", tax_group=['fungi'],\
-                                            species=4932, tf_class="Basic leucine zipper factors (bZIP)")
-    print("fetched " + str(len(bZIP_db_s_cerevisiae)) + " motifs from Basic leucine zipper factors (bZIP)")
+    CZF_s_cerevisiae_ACE2 = jdb.fetch_motif_by_id("MA0267.1")
+    print("fetched a C2H2 zinc finger factors motif ACE2" )
+       
+    CZF_s_cerevisiae_ADR1 = jdb.fetch_motif_by_id("MA0268.1")
+    print("fetched a C2H2 zinc finger factors motif ADR1" )
 
-    Homeo_db_s_cerevisiae = jdb.fetch_motifs(collection="core", tax_group=['fungi'],\
-                                             species=4932, tf_class="Homeo domain factors")
-    print("fetched " + str(len(Homeo_db_s_cerevisiae)) + " motifs from Homeo domain factors")
+    CZF_s_cerevisiae=[CZF_s_cerevisiae_ACE2,CZF_s_cerevisiae_ADR1]
 
-    ZincFinger_db_s_cerevisiae = jdb.fetch_motifs(collection="core", tax_group=['fungi'],\
-                                            species=4932, tf_class="C2H2 zinc finger factors")
-    print("fetched " + str(len(ZincFinger_db_s_cerevisiae)) + " motifs from C2H2 zinc finger factors")
+    bZIP_s_cerevisiae_ARR1 = jdb.fetch_motif_by_id("MA0274.1")
+    print("fetched a bZIP motif ARR1" )
+          
+    bZIP_s_cerevisiae_CAD1 = jdb.fetch_motif_by_id("MA0279.1")
+    print("fetched a bZIP motif CAD1" )
+
+    bZIP_db_s_cerevisiae=[bZIP_s_cerevisiae_ARR1,bZIP_s_cerevisiae_CAD1]
+          
+    homeo_s_cerevisiae_HMRA1 = jdb.fetch_motif_by_id("MA0327.1")
+    print("fetched a Homeo domain motif HMRA1" )
+          
+    homeo_s_cerevisiae_HMRA2 = jdb.fetch_motif_by_id("MA0318.1")
+    print("fetched a Homeo domain motif HMRA2" )
+
+    homeo_s_cerevisiae_MATALPHA2 = jdb.fetch_motif_by_id("MA0328.1")
+    print("fetched a Homeo domain motif MATALPHA2" )
+
+    
+    Homeo_db_s_cerevisiae=[homeo_s_cerevisiae_HMRA1, homeo_s_cerevisiae_HMRA2, homeo_s_cerevisiae_MATALPHA2]
+   
 
 
 
-    self.total_motif_count =   len(bHLH_db_s_cerevisiae) + len(bHSH_db_s_cerevisiae) + len(bZIP_db_s_cerevisiae) + len(Homeo_db_s_cerevisiae) + len(ZincFinger_db_s_cerevisiae)
-    self.total_cluster_count = 5
+    self.total_motif_count =   len(bHLH_db_s_cerevisiae) + len(CZF_s_cerevisiae) + len(bZIP_db_s_cerevisiae) + len(Homeo_db_s_cerevisiae)
+    self.total_cluster_count = 4
     print("fetched " + str(self.total_motif_count) + " motifs in total. " )
-    self.dbs = [bHLH_db_s_cerevisiae,bHSH_db_s_cerevisiae,bZIP_db_s_cerevisiae,Homeo_db_s_cerevisiae,ZincFinger_db_s_cerevisiae]
+    self.dbs = [bHLH_db_s_cerevisiae,CZF_s_cerevisiae,bZIP_db_s_cerevisiae,Homeo_db_s_cerevisiae]
     return
   
 
@@ -99,13 +116,11 @@ class DNABindingMotifs(object):
     return
 
 
-db = DNABindingMotifs()
-# print(db.mmm)
-# first value in db.mmm dictionary/map
-sth1 = db.mmm[list(db.mmm.keys())[0]]
-sth2 = db.mmm[list(db.mmm.keys())[0]]
-print(sth1.pssm)
-sth1.pseudocounts = motifs.jaspar.calculate_pseudocounts(sth1)
-sth2.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
-print(sth1.pssm)
-print(sth1.pssm.dist_pearson(sth2.pssm))
+#db = DNABindingMotifs()
+#sth1 = db.mmm[list(db.mmm.keys())[0]]
+#sth2 = db.mmm[list(db.mmm.keys())[0]]
+#print(sth1.pssm)
+#sth1.pseudocounts = motifs.jaspar.calculate_pseudocounts(sth1)
+#sth2.pseudocounts = {'A':0.6, 'C': 0.4, 'G': 0.4, 'T': 0.6}
+#print(sth1.pssm)
+#print(sth1.pssm.dist_pearson(sth2.pssm))
