@@ -1,19 +1,19 @@
 import sys
 sys.path.insert(1,'../dataset')
 import dbm
-import dataset_yeast_core
+import dataset_yeast_mini
 from  clustering import hierarchical_clustering
 from  clustering import kmeans, kmeans_self_defined_dist
 from  distance_matrix_calculation import pearson_distance
+from  distance_matrix_calculation import jensen_distance
 
-dataset = dataset_yeast_core.DNABindingMotifs()
+dataset = dataset_yeast_mini.DNABindingMotifs()
 # dataset.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
 # where each motif matrix can be retrieved by motif.pssm
 print(dataset.mmm)
 print("Finish printing dataset \n")
 dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
-# dm is distance matrix
-# idlist is motif's order in the distance matrix
+# dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
 
 # Hierarchical clustering
