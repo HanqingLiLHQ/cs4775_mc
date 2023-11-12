@@ -22,9 +22,9 @@ dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
 # print(clusters)
 
 
-
 # K-means clustering
 # One advantage of K-means is it can customize number of clusters needed
 num_clusters = 3  # Define the number of clusters
 clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 print(clusters)
+print("Finish printing result by K-means \n")

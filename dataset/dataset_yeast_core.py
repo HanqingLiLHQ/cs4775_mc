@@ -100,6 +100,8 @@ class DNABindingMotifs(object):
 
 
 db = DNABindingMotifs()
+# print(db.mmm)
+# first value in db.mmm dictionary/map
 sth1 = db.mmm[list(db.mmm.keys())[0]]
 sth2 = db.mmm[list(db.mmm.keys())[0]]
 print(sth1.pssm)
