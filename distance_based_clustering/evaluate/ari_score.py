@@ -3,10 +3,10 @@ from sklearn.metrics import (
 )
 
 
-def read_labels_from_file(file_path):
-    with open(file_path, "r") as f:
-        labels = [int(label) for label in f.read().split()]
-    return labels
+# def read_labels_from_file(file_path):
+#     with open(file_path, "r") as f:
+#         labels = [int(label) for label in f.read().split()]
+#     return labels
 
 
 """
@@ -23,8 +23,8 @@ def evaluate_clustering(true_labels, predicted_labels):
     print("Adjusted Rand Index (ARI):", ari)
 
 
-true_labels = read_labels_from_file("true_labels.txt")
-predicted_labels = read_labels_from_file("predicted_labels.txt")
+# true_labels = read_labels_from_file("true_labels.txt")
+# predicted_labels = read_labels_from_file("predicted_labels.txt")
 
 # Evaluate the clustering results
-evaluate_clustering(true_labels, predicted_labels)
+# evaluate_clustering(true_labels, predicted_labels)
