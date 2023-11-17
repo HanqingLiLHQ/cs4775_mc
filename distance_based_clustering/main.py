@@ -1,6 +1,6 @@
 import sys
 
-sys.path.insert(1, "../CS4775_MC-1/dataset")
+sys.path.insert(1, "../CS4775_MC/dataset")
 import dbm
 import dataset_yeast_mini
 from clustering import hierarchical_clustering
@@ -53,6 +53,14 @@ print("Finish printing dataset \n")
 dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
 # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
+dataset_cc = dataset_yeast_mini.DNABindingMotifs().cc
+print(dataset_cc)
+print("Finish printing dataset cc \n")
+
+# Convert dataset_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
+dataset_cc_list = [[key for key in d] for d in dataset_cc]
+print(dataset_cc_list)
+print("Finish printing dataset cc list \n")
 
 # Hierarchical clustering
 # clusters = hierarchical_clustering.hierarchical_clustering(5, dm, idlist)
@@ -62,13 +70,16 @@ dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
 
 # K-means clustering
 # One advantage of K-means is it can customize number of clusters needed
-num_clusters = 3  # Define the number of clusters
+num_clusters = len(dataset_cc_list)  # Define the number of clusters
+print(num_clusters)
+print("Finish printing num_clusters \n")
+
 clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 print(clusters)
 print("Finish printing result by K-means \n")
 
 
-dataset_dic = dict(sorted(assign_unique_numbers_to_values(dataset.mmm).items()))
+dataset_dic = dict(sorted(generate_labels_from_clusters(dataset_cc_list).items()))
 print(dataset_dic)
 print("Finish printing true labels \n")
 clusters_dic = dict(sorted(generate_labels_from_clusters(clusters).items()))
