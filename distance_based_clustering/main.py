@@ -47,13 +47,13 @@ dataset = dataset_yeast_mini.DNABindingMotifs()
 # dataset.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
 # where each motif matrix can be retrieved by motif.pssm
 
-
 print(dataset.mmm)
 print("Finish printing dataset \n")
+
 dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
 # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
-dataset_cc = dataset_yeast_mini.DNABindingMotifs().cc
+dataset_cc = dataset.cc
 print(dataset_cc)
 print("Finish printing dataset cc \n")
 
