@@ -12,6 +12,8 @@ from evaluate import ari_score
 from evaluate import fmi_score
 from evaluate import nmi_score
 
+################################################################################
+
 # Helper Functions
 
 
@@ -94,12 +96,13 @@ score_ari = ari_score.evaluate_clustering(true_labels, predicted_labels)
 score_fmi = fmi_score.evaluate_clustering(true_labels, predicted_labels)
 score_nmi = nmi_score.evaluate_clustering(true_labels, predicted_labels)
 
+
 ################################################################################
 
 # Dataset: fungi_mini
+
 dataset2 = fungi_mini.DNABindingMotifs()
 # dataset2.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
-
 
 print(dataset2.mmm)
 print("Finish printing dataset2 \n")
