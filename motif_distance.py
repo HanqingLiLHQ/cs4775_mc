@@ -7,6 +7,7 @@ from Bio import motifs
 from Bio.motifs import Motif
 from pyjaspar import jaspardb
 import matplotlib.pyplot as  plt
+from scipy import stats
 
 def preprocess(motif):
     """
@@ -15,17 +16,18 @@ def preprocess(motif):
     return np.array(list(motif.counts.normalize(pseudocounts=0.1).values())).T
 
 
-def naive_compare(distance_method,ppm1, ppm2):
+def naive_compare(distance_method,ppm1, ppm2, average = np.mean):
     """
     This version compare the columns one by one, both starting from the first. The column distance similarities are averaged
     to calculate the motif similarity. 
     Precondition:
         distance_method: returns a numerical distance value based on two input 4D vectors
         ppm1, ppm2: n * 4 matrices with the same dimensionality
+        average: feed in a list, return a numerical value that represents some type of average
     """
     assert ppm1.shape == ppm2.shape
     col_dists = [distance_method(col1, col2) for col1, col2 in zip(ppm1, ppm2)]
-    distance = np.mean(col_dists)
+    distance = average(col_dists)
     return distance
     
 
@@ -48,7 +50,7 @@ def add_column(ppm, start, end, col=[0.25,0.25,0.25,0.25]):
     return np.vstack([start_m, ppm,end_m])
 
 
-def expand_compare(col_dist,ppm1,ppm2,bg=[0.25,0.25,0.25,0.25]):
+def expand_compare(col_dist,ppm1,ppm2,bg=[0.25,0.25,0.25,0.25],average = np.mean):
     """
     Slide one motif through the other to check all possible ungapped alignments, the unmatched positions are supplied with
     background probability.
@@ -56,6 +58,7 @@ def expand_compare(col_dist,ppm1,ppm2,bg=[0.25,0.25,0.25,0.25]):
         col_dist: returns a numerical distance value based on two input 4D vectors
         ppm1/ppm2: n * 4 numpy matrix, each row represents a position
         bg: background frequency, represented by 4-D vectors that should sum to 1 
+        average: feed in a list, return a numerical value that represents some type of average
     """
     off_dist = {}
     # swap the two matrices to ensure that ppm1 is longer than ppm2
@@ -75,15 +78,17 @@ def expand_compare(col_dist,ppm1,ppm2,bg=[0.25,0.25,0.25,0.25]):
         elif offset > len1 - len2:
             exp_ppm2 = add_column(ppm2, offset, 0, col = bg)
             exp_ppm1 = add_column(ppm1, 0, offset + len2 - len1, col = bg)
-        off_dist[offset] = naive_compare(col_dist, exp_ppm1, exp_ppm2)
+        off_dist[offset] = naive_compare(col_dist, exp_ppm1, exp_ppm2, average = average)
     return off_dist
             
-def cut_compare(col_dist, ppm1, ppm2):
+            
+def cut_compare(col_dist, ppm1, ppm2, average = np.mean):
     """
     Slide one motif through the other to check all possible ungapped alignments. Only consider the overlapping region
     Preconditions:
         col_dist: returns a numerical distance value based on two input 4D vectors
         ppm1/ppm2: n * 4 numpy matrix, each row represents a position
+        average: feed in a list, return a numerical value that represents some type of average
     """    
     off_dist = {}
     # swap the two matrices to ensure that ppm1 is longer than ppm2
@@ -102,9 +107,8 @@ def cut_compare(col_dist, ppm1, ppm2):
         elif offset > len1 - len2:
             cut_ppm1 = ppm1[offset:]
             cut_ppm2 = ppm2[:len1 - offset]
-        off_dist[offset] = naive_compare(col_dist, cut_ppm1, cut_ppm2)
+        off_dist[offset] = naive_compare(col_dist, cut_ppm1, cut_ppm2, average = average)
     return off_dist
-
 
 
 def compare_align(col_dist,ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
@@ -114,6 +118,7 @@ def compare_align(col_dist,ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
         col_dist: returns a numerical distance value based on two input 4D vectors
         ppm1/ppm2: n * 4 numpy matrix, each row represents a position
         bg: background frequency, represented by 4-D vectors that should sum to 1 (only expand_compare will use it)
+    Motif distance is calculated via np.mean
     """
     plot, ax = plt.subplots()
     exp_results = expand_compare(col_dist, ppm1, ppm2,bg = bg)
@@ -129,16 +134,17 @@ def compare_align(col_dist,ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
     return
 
 
-def compare_distance(ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
+def compare_distance(ppm1,ppm2, bg = [0.25,0.25,0.25,0.25], average = np.mean):
     """
     Helper function to compare different column-wise distance measurements in terms of sliding alignment of expanded motifs
     Preconditions:
         ppm1/ppm2: n * 4 numpy matrix, each row represents a position
+        average: input a list, output some numerical value representing some type of average
     """
     plot, ax = plt.subplots()
-    l2_results = expand_compare(Euclidean_Distance, ppm1, ppm2, bg = bg)
-    js_results = expand_compare(Jensen_Shannon_Distance,ppm1,ppm2,bg = bg)
-    kl_results = expand_compare(Kullback_Leibler_Distance,ppm1,ppm2, bg = bg)
+    l2_results = expand_compare(Euclidean_Distance, ppm1, ppm2, bg = bg, average = average)
+    js_results = expand_compare(Jensen_Shannon_Distance,ppm1,ppm2,bg = bg, average = average)
+    kl_results = expand_compare(Kullback_Leibler_Distance,ppm1,ppm2, bg = bg, average = average)
     l2_values = np.array(list(l2_results.values())) / sum(l2_results.values())
     js_values = np.array(list(js_results.values())) / sum(js_results.values())
     kl_values = np.array(list(kl_results.values())) / sum(kl_results.values())
@@ -150,11 +156,10 @@ def compare_distance(ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
     ax.set_xticks(list(l2_results.keys()))
     ax.set_ylim(bottom = 0, top = None)
     ax.set_xlabel("offset (positions)")
-    ax.set_ylabel("motif distance")
+    ax.set_ylabel("normalized motif distance")
     return
 
-
-def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25]):
+def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25], average = np.mean):
     """
     Return the shortest alignment distance between ppm1, ppm2, calculated via column-wise distance measurement [col_dist] with [align_method]. 
     Preconditions:
@@ -164,6 +169,6 @@ def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25]):
         alignment_method: ["expand","overlap"]
     """
     if align_method == "expand":
-        return min(list(expand_compare(col_dist, ppm1,ppm2, bg = bg).values()))
+        return min(list(expand_compare(col_dist, ppm1,ppm2, average = average).values()))
     elif align_method == "overlap":
-        return min(list(cut_compare(col_dist, ppm1, ppm2).values()))
+        return min(list(cut_compare(col_dist, ppm1, ppm2, average = average).values()))

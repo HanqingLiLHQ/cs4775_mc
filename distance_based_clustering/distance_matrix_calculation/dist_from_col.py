@@ -5,6 +5,7 @@ sys.path.insert(1, "../CS4775_MC")
 import motif_distance
 from  column_distance import *
 import numpy as np
+from scipy import stats
 
 def calculate_distance_matrix(dataset):
     # Create a PWM for each motif and normalize it with pseudocounts
@@ -25,10 +26,13 @@ def calculate_distance_matrix(dataset):
             if i < j:  # Since the matrix is symmetric, we only need to calculate once
                 ppm1 = np.array(list(ppm_map[motif_id_1].values())).T
                 ppm2 = np.array(list(ppm_map[motif_id_2].values())).T
+                # The first attribute could be:
                 # Kullback_Leibler_Distance
                 # Jensen_Shannon_Distance
                 # Euclidean_Distance
-                distance = motif_distance.distance(Kullback_Leibler_Distance, ppm1, ppm2,"expand")
+                # average method could be:
+
+                distance = motif_distance.distance(Kullback_Leibler_Distance, ppm1, ppm2,"expand", average = np.mean)
                 distance_matrix[i][j] = distance_matrix[j][i] = distance
 
     return distance_matrix.tolist(), motif_ids
