@@ -78,8 +78,8 @@ num_clusters = len(dataset_cc_list)  # Define the number of clusters
 print(num_clusters)
 print("Finish printing num_clusters \n")
 
-#clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm , idlist)
-clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
+clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm , idlist)
+# clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 print(clusters)
 print("Finish printing result by K-means \n")
 
@@ -129,8 +129,8 @@ num_clusters2 = len(dataset2_cc_list)  # Define the number of clusters
 print(num_clusters2)
 print("Finish printing num_clusters2 \n")
 
-# clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2)
-clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
+clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2)
+# clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 print(clusters2)
 print("Finish printing result by K-means \n")
 

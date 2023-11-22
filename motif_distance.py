@@ -162,6 +162,8 @@ def compare_distance(ppm1,ppm2, bg = [0.25,0.25,0.25,0.25], average = np.mean):
 def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25], average = np.mean):
     """
     Return the shortest alignment distance between ppm1, ppm2, calculated via column-wise distance measurement [col_dist] with [align_method]. 
+    If the alignment method is chosen to be "expand", the algorithm will calculate a threshold to see whether the minimum value
+    really indicates a meaningful motif alignment. If not, the algorithm will return the mean distance of all possible alignments (as all are possible). 
     Preconditions:
         col_dist: returns a numerical distance value based on two input 4D vectors
         ppm1/ppm2: n * 4 numpy matrix, each row represents a position
@@ -169,6 +171,15 @@ def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25], ave
         alignment_method: ["expand","overlap"]
     """
     if align_method == "expand":
-        return min(list(expand_compare(col_dist, ppm1,ppm2, average = average).values()))
+        output = list(expand_compare(col_dist, ppm1,ppm2, average = average).values())
+        minimum =  min(output)
+        # The threshold is calculated as the distance when the motifs are not overlapping with each other. 
+        threshold = naive_compare(col_dist, add_column(ppm1,0, len(ppm2),bg), add_column(ppm2,len(ppm1),0,bg), average = average)
+        if minimum < threshold:
+            # This might be a meaningful alignment
+            return minimum
+        else:
+            # just return the mean distance of all possible alignments
+            return np.mean(output)
     elif align_method == "overlap":
         return min(list(cut_compare(col_dist, ppm1, ppm2, average = average).values()))
