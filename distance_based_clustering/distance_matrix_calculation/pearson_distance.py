@@ -28,7 +28,7 @@ def calculate_distance_matrix(dataset):
         for j in range(len(motif_ids)):
             motif2 = motif_ids[j]
             motif1_distances.append(
-                (mmm[motif1].pssm).dist_pearson(mmm[motif2].pssm)[0])
+                ((mmm[motif1].pssm).dist_pearson(mmm[motif2].pssm))[0])
         mmd_matrix.append(motif1_distances)
 
     return mmd_matrix, motif_ids
