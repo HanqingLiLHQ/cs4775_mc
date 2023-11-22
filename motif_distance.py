@@ -6,7 +6,7 @@ import numpy as np
 from Bio import motifs
 from Bio.motifs import Motif
 from pyjaspar import jaspardb
-
+import matplotlib.pyplot as  plt
 
 def preprocess(motif):
     """
@@ -104,3 +104,66 @@ def cut_compare(col_dist, ppm1, ppm2):
             cut_ppm2 = ppm2[:len1 - offset]
         off_dist[offset] = naive_compare(col_dist, cut_ppm1, cut_ppm2)
     return off_dist
+
+
+
+def compare_align(col_dist,ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
+    """
+    Helper function to compare the expand/cut motif comparison methods given two ppm and the distance method
+    Preconditions:
+        col_dist: returns a numerical distance value based on two input 4D vectors
+        ppm1/ppm2: n * 4 numpy matrix, each row represents a position
+        bg: background frequency, represented by 4-D vectors that should sum to 1 (only expand_compare will use it)
+    """
+    plot, ax = plt.subplots()
+    exp_results = expand_compare(col_dist, ppm1, ppm2,bg = bg)
+    cut_results = cut_compare(col_dist, ppm1, ppm2)
+    plt.plot(exp_results.keys(), exp_results.values(),label = "Expanded Motif Comparison")
+    plt.plot(cut_results.keys(), cut_results.values(), label = "Overlap Motif Comparison")
+    plt.legend()
+    plt.title("Comparison of Two Motif Alignment (sliding) Methods")
+    ax.set_xticks(list(exp_results.keys()))
+    ax.set_ylim(bottom = 0, top = None)
+    ax.set_xlabel("offset (positions)")
+    ax.set_ylabel("motif distance")
+    return
+
+
+def compare_distance(ppm1,ppm2, bg = [0.25,0.25,0.25,0.25]):
+    """
+    Helper function to compare different column-wise distance measurements in terms of sliding alignment of expanded motifs
+    Preconditions:
+        ppm1/ppm2: n * 4 numpy matrix, each row represents a position
+    """
+    plot, ax = plt.subplots()
+    l2_results = expand_compare(Euclidean_Distance, ppm1, ppm2, bg = bg)
+    js_results = expand_compare(Jensen_Shannon_Distance,ppm1,ppm2,bg = bg)
+    kl_results = expand_compare(Kullback_Leibler_Distance,ppm1,ppm2, bg = bg)
+    l2_values = np.array(list(l2_results.values())) / sum(l2_results.values())
+    js_values = np.array(list(js_results.values())) / sum(js_results.values())
+    kl_values = np.array(list(kl_results.values())) / sum(kl_results.values())
+    plt.plot(l2_results.keys(),l2_values,label = "Euclidean_Distance")
+    plt.plot(js_results.keys(),js_values,label = "Jensen_Shannon_Distance")
+    plt.plot(kl_results.keys(), kl_values,label = "Kullback_Leibler_Distance")
+    plt.title("Comparison of Different Column-wise Distance Measurements with Expanded Motif Alignment")
+    plt.legend()
+    ax.set_xticks(list(l2_results.keys()))
+    ax.set_ylim(bottom = 0, top = None)
+    ax.set_xlabel("offset (positions)")
+    ax.set_ylabel("motif distance")
+    return
+
+
+def distance(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.25]):
+    """
+    Return the shortest alignment distance between ppm1, ppm2, calculated via column-wise distance measurement [col_dist] with [align_method]. 
+    Preconditions:
+        col_dist: returns a numerical distance value based on two input 4D vectors
+        ppm1/ppm2: n * 4 numpy matrix, each row represents a position
+        bg: background frequency, represented by 4-D vectors that should sum to 1 (only expand_compare will use it)
+        alignment_method: ["expand","overlap"]
+    """
+    if align_method == "expand":
+        return min(list(expand_compare(col_dist, ppm1,ppm2, bg = bg).values()))
+    elif align_method == "overlap":
+        return min(list(cut_compare(col_dist, ppm1, ppm2).values()))

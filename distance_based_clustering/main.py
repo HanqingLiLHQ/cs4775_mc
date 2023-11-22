@@ -8,6 +8,7 @@ from clustering import hierarchical_clustering
 from clustering import kmeans, kmeans_self_defined_dist
 from distance_matrix_calculation import pearson_distance
 from distance_matrix_calculation import jensen_distance
+from distance_matrix_calculation import dist_from_col
 from evaluate import ari_score
 from evaluate import fmi_score
 from evaluate import nmi_score
@@ -59,7 +60,7 @@ dataset = dataset_yeast_mini.DNABindingMotifs()
 print(dataset.mmm)
 print("Finish printing dataset \n")
 
-dm, idlist = pearson_distance.calculate_distance_matrix(dataset)
+dm, idlist = dist_from_col.calculate_distance_matrix(dataset)
 # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
 dataset_cc = dataset.cc
@@ -77,6 +78,7 @@ num_clusters = len(dataset_cc_list)  # Define the number of clusters
 print(num_clusters)
 print("Finish printing num_clusters \n")
 
+#clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm , idlist)
 clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 print(clusters)
 print("Finish printing result by K-means \n")
@@ -107,7 +109,7 @@ dataset2 = fungi_mini.DNABindingMotifs()
 print(dataset2.mmm)
 print("Finish printing dataset2 \n")
 
-dm2, idlist2 = pearson_distance.calculate_distance_matrix(dataset2)
+dm2, idlist2 = dist_from_col.calculate_distance_matrix(dataset2)
 
 dataset2_cc = dataset2.cc
 print(dataset2_cc)
@@ -127,6 +129,7 @@ num_clusters2 = len(dataset2_cc_list)  # Define the number of clusters
 print(num_clusters2)
 print("Finish printing num_clusters2 \n")
 
+# clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2)
 clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 print(clusters2)
 print("Finish printing result by K-means \n")
