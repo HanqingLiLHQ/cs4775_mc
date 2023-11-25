@@ -5,7 +5,7 @@ import dbm
 import dataset_yeast_mini
 import fungi_mini
 from clustering import hierarchical_clustering
-from clustering import kmeans, kmeans_self_defined_dist
+from clustering import kmeans_self_defined_dist
 from distance_matrix_calculation import pearson_distance
 from distance_matrix_calculation import jensen_distance
 from evaluate import ari_score
