@@ -30,7 +30,9 @@ def init_mtf():
             # print(temp_mtf.get_cols())
             mtf_dict[my_id] = temp_mtf
             curr_id += 1
-    greedy.greedyclus(0.5, mtf_dict)
+    # greedy.greedyclus(0.5, mtf_dict)
+    print(mtf_dict[0].get_cols())
+    print(mtf_dict[0].get_pwm_cols())
     return mtf_dict
 
 

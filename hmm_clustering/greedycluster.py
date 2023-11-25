@@ -27,6 +27,7 @@ from hmm_clustering.motifdata import Mtf
 def eulc_mtf_distcalc(mtf1: Mtf, mtf2: Mtf):
   ppm1 = mtf1.get_cols()
   ppm2 = mtf2.get_cols()
+  """ Offset Position? Yes-int, No-None"""
   return mtfdis.distance(coldis.Euclidean_Distance, ppm1, ppm2, "expand")
 
 '''
@@ -129,7 +130,8 @@ def calculate_mean_vectors(cols_list):
       for padcols in padded_cols:
           if any(padcols[i] != 0):
             cols_array.append(padcols[i])
-
+      """ USE COUNT MATRIX????
+       ALIGNNMENT?"""
       newcols_list.append(np.mean(cols_array, axis=0))
     newcols = np.array(newcols_list)
     # print("newcols = "+str(newcols))

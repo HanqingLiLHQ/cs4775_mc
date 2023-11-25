@@ -42,13 +42,33 @@ class Mtf():
       return self.id
   
   """
+  Returns all the columns of the counts of a Mtf object in a list
+
+  returns:
+  cols_normalized: n*4 matrix, with each of the the vectors having probabilities sum 
+    up to 1, that represents the probability of A,C,G,T respectively.
+  """
+  def get_cols(self):
+    a = self.mtf.counts.get('A')
+    t = self.mtf.counts.get('T')
+    c = self.mtf.counts.get('C')
+    g = self.mtf.counts.get('G')
+
+    # Assuming all a, t, c, g have the same length
+    cols = np.array([a, c, g, t]).T  # Transpose to get columns
+
+    cols_normalized = np.apply_along_axis(lambda x: x / np.sum(x), axis=1, arr=cols)
+
+    return cols_normalized
+  
+    """
   Returns all the columns of the pwm of a Mtf object in a list
 
   returns:
   cols: n*4 matrix, with each of the the vectors having probabilities sum 
     up to 1, that represents the probability of A,C,G,T respectively.
   """
-  def get_cols(self):
+  def get_pwm_cols(self):
     a = self.mtf.pwm.get('A')
     t = self.mtf.pwm.get('T')
     c = self.mtf.pwm.get('C')
