@@ -45,9 +45,8 @@ class Mtf():
   Returns all the columns of the pwm of a Mtf object in a list
 
   returns:
-  cols: a list of 4-dimension vectors, with each of the the 
-    vectors having probabilities sum up to 1, that represents the
-    probability of A,C,G,T respectively.
+  cols: n*4 matrix, with each of the the vectors having probabilities sum 
+    up to 1, that represents the probability of A,C,G,T respectively.
   """
   def get_cols(self):
     a = self.mtf.pwm.get('A')
@@ -64,16 +63,17 @@ class Mtf():
   Returns the ppm as a n*4 list of a Mtf object
 
   returns:
-  ppm: n*4 matrix representing the pwm of a Mtf object
+  ppm: 4*n matrix representing the pwm of a Mtf object
   """
   def get_ppm(self):
-      ppm = np.array([])
-      ppm.append(list(self.mtf.pwm.get('A')))
-      ppm.append(list(self.mtf.pwm.get('C')))
-      ppm.append(list(self.mtf.pwm.get('G')))
-      ppm.append(list(self.mtf.pwm.get('T')))
-      print(ppm)
-      return ppm
+    a = self.mtf.pwm.get('A')
+    c = self.mtf.pwm.get('C')
+    g = self.mtf.pwm.get('G')
+    t = self.mtf.pwm.get('T')
+
+    ppm = np.vstack([a, c, g, t])
+    
+    return ppm
   
 
   """
