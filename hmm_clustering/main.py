@@ -9,13 +9,13 @@ import dataset.dataset_yeast_mini as yst
 import dataset.fungi_mini as fg
 
 
+#EVERYTHING IN THE ORDER OF A-C-G-T!
 '''
-  Initializes data and returns the pwm stored in a list. 
-  pwms are power density matrices that stored as dictionaries with 
-    keys 'A', 'T', 'C', 'G' and values as tuples.
+  Initializes data and returns motifs stored in Mtf object 
 
   returns:
-  pwm_list: list of pwms from the source data
+  mtf_dict: dictionaries of all the Motifs in Mtf format, with key=id
+    and value=Mtf object
 '''
 def init_mtf():
     mtf_dict = {}
@@ -26,9 +26,13 @@ def init_mtf():
             temp_mtf = Mtf(mtf=j, id=curr_id)
             # pwm is a dictionary; j.pwm.get('A') gives back a very long tuple.
             my_id = temp_mtf.get_id()
+            # print(temp_mtf.get_pwm())
+            # print(temp_mtf.get_cols())
             mtf_dict[my_id] = temp_mtf
             curr_id += 1
-    print(mtf_dict)
+    # greedy.greedyclus(0.5, mtf_dict)
+    print(mtf_dict[0].get_cols())
+    print(mtf_dict[0].get_pwm_cols())
     return mtf_dict
 
 
