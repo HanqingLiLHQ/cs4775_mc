@@ -189,7 +189,7 @@ def distance_offset(col_dist, ppm1, ppm2, align_method, bg = [0.25,0.25,0.25,0.2
     Return the shortest alignment distance between ppm1, ppm2 as well as the offset of the two motifs for calculating this distance,
       calculated via column-wise distance measurement [col_dist] with [align_method]. The offset indicates how many positions the second 
       motifs start position differs from the first motifs' start position. If offset is 1, it indicates that the best alignment is:
-      [0, len(motif1)] and [offset, len(motif2) + offset]. If the offset is None, it indicates that there is no meaningful alignment. 
+      [0, len(motif1)) and [offset, len(motif2) + offset). If the offset is None, it indicates that there is no meaningful alignment. 
     If the alignment method is chosen to be "expand", the algorithm will calculate a threshold to see whether the minimum value
     really indicates a meaningful motif alignment. If not, the algorithm will return the mean distance of all possible alignments (as all are possible). 
     Preconditions:
