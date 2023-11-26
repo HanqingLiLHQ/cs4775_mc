@@ -1,9 +1,11 @@
 import sys
 
 sys.path.insert(1, "../CS4775_MC/dataset")
+sys.path.insert(2,"../CS4775_MC/")
 import dbm
 import dataset_yeast_mini
 import fungi_mini
+from  column_distance import *
 from clustering import hierarchical_clustering
 from clustering import kmeans_self_defined_dist
 from distance_matrix_calculation import pearson_distance
@@ -88,7 +90,8 @@ dataset = dataset_yeast_mini.DNABindingMotifs()
 print(dataset.mmm)
 print("Finish printing dataset \n")
 
-dm, idlist = dist_from_col.calculate_distance_matrix(dataset)
+dm, idlist = dist_from_col.calculate_distance_matrix(dataset, Euclidean_Distance, \
+                                                     "expand", bg = [0.25,0.25,0.25,0.25],average = np.mean)
 # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
 dataset_cc = dataset.cc
@@ -155,7 +158,8 @@ dataset2 = fungi_mini.DNABindingMotifs()
 print(dataset2.mmm)
 print("Finish printing dataset2 \n")
 
-dm2, idlist2 = dist_from_col.calculate_distance_matrix(dataset2)
+dm2, idlist2 = dist_from_col.calculate_distance_matrix(dataset2, Euclidean_Distance, \
+                                                     "expand", bg = [0.25,0.25,0.25,0.25],average = np.mean)
 
 dataset2_cc = dataset2.cc
 print(dataset2_cc)
