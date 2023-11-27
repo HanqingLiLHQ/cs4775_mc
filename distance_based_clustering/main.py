@@ -1,11 +1,12 @@
 import sys
 
 sys.path.insert(1, "../CS4775_MC/dataset")
-sys.path.insert(2,"../CS4775_MC/")
+sys.path.insert(2, "../CS4775_MC/")
 import dbm
 import dataset_yeast_mini
 import fungi_mini
-from  column_distance import *
+import fungi
+from column_distance import *
 from clustering import hierarchical_clustering
 from clustering import kmeans_self_defined_dist
 from distance_matrix_calculation import pearson_distance
@@ -15,15 +16,6 @@ from evaluate import ari_score
 from evaluate import fmi_score
 from evaluate import nmi_score
 from evaluate import graph
-from Bio import motifs
-from Bio.Seq import Seq
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import os
-import os
-from Bio import motifs
-import os
-from Bio import motifs
 
 
 ################################################################################
@@ -90,8 +82,9 @@ dataset = dataset_yeast_mini.DNABindingMotifs()
 print(dataset.mmm)
 print("Finish printing dataset \n")
 
-dm, idlist = dist_from_col.calculate_distance_matrix(dataset, Euclidean_Distance, \
-                                                     "expand", bg = [0.25,0.25,0.25,0.25],average = np.mean)
+dm, idlist = dist_from_col.calculate_distance_matrix(
+    dataset, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
+)
 # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
 dataset_cc = dataset.cc
@@ -158,8 +151,9 @@ dataset2 = fungi_mini.DNABindingMotifs()
 print(dataset2.mmm)
 print("Finish printing dataset2 \n")
 
-dm2, idlist2 = dist_from_col.calculate_distance_matrix(dataset2, Euclidean_Distance, \
-                                                     "expand", bg = [0.25,0.25,0.25,0.25],average = np.mean)
+dm2, idlist2 = dist_from_col.calculate_distance_matrix(
+    dataset2, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
+)
 
 dataset2_cc = dataset2.cc
 print(dataset2_cc)
@@ -210,3 +204,67 @@ predicted_labels2 = list(clusters2_dic.values())
 score_ari2 = ari_score.evaluate_clustering(true_labels2, predicted_labels2)
 score_fmi2 = fmi_score.evaluate_clustering(true_labels2, predicted_labels2)
 score_nmi2 = nmi_score.evaluate_clustering(true_labels2, predicted_labels2)
+
+################################################################################
+
+# Dataset: fungi
+
+dataset3 = fungi.DNABindingMotifs()
+# dataset3.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
+
+print(dataset3.mmm)
+print("Finish printing dataset3 \n")
+
+dm3, idlist3 = dist_from_col.calculate_distance_matrix(
+    dataset3, Euclidean_Distance, "expand", bg=[0.27, 0.23, 0.23, 0.27], average=np.mean
+)
+
+dataset3_cc = dataset3.cc
+print(dataset3_cc)
+print("Finish printing dataset3 cc \n")
+
+base_dir3 = "nature_clusters3"
+generator3 = graph.MotifGraphGenerator(dataset3_cc, base_dir3)
+cluster_paths3 = generator3.generate_cluster_graphs()
+generator3.generate_final_composite_graph(cluster_paths3)
+
+# Convert dataset3_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
+dataset3_cc_list = [[key for key in d] for d in dataset3_cc]
+print(dataset3_cc_list)
+print("Finish printing dataset3 cc list \n")
+
+
+num_clusters3 = len(dataset3_cc_list)  # Define the number of clusters
+print(num_clusters3)
+print("Finish printing num_clusters3 \n")
+
+cluster3 = hierarchical_clustering.hierarchical_clustering(num_clusters3, dm3, idlist3)
+print(cluster3)
+print("Finish printing result by hierarchical clustering \n")
+
+# cluster2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
+# print(cluster2)
+# print("Finish printing result by K means \n")
+
+our_cluster3 = create_cluster_dicts(cluster3, dataset3)
+
+base_dir_our3 = "predicted_clusters3"
+generator_our3 = graph.MotifGraphGenerator(our_cluster3, base_dir_our3)
+cluster_paths_our3 = generator_our3.generate_cluster_graphs()
+generator_our3.generate_final_composite_graph(cluster_paths_our3)
+
+
+dataset3_dic = dict(sorted(generate_labels_from_clusters(dataset3_cc_list).items()))
+print(dataset3_dic)
+print("Finish printing true labels \n")
+
+clusters3_dic = dict(sorted(generate_labels_from_clusters(cluster3).items()))
+print(clusters3_dic)
+print("Finish printing predicted labels \n")
+
+true_labels3 = list(dataset3_dic.values())
+predicted_labels3 = list(clusters3_dic.values())
+
+score_ari3 = ari_score.evaluate_clustering(true_labels3, predicted_labels3)
+score_fmi3 = fmi_score.evaluate_clustering(true_labels3, predicted_labels3)
+score_nmi3 = nmi_score.evaluate_clustering(true_labels3, predicted_labels3)

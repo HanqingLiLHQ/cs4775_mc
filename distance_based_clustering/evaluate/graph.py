@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-from Bio import motifs
 import os
 
 
@@ -28,21 +27,41 @@ class MotifGraphGenerator:
                 self.save_motif_logo(motif_obj, logo_path)
 
             num_motifs = len(motif_dict)
-            fig, axes = plt.subplots(1, num_motifs, figsize=(num_motifs * 4, 4))
-            if num_motifs == 1:
-                axes = [axes]
-
-            for ax, logo_path in zip(axes, image_paths):
-                try:
-                    img = mpimg.imread(logo_path)
-                    ax.imshow(img)
-                    ax.axis("off")
-                    motif_name = os.path.basename(logo_path).replace(".png", "")
-                    ax.set_title(motif_name)
-                except FileNotFoundError:
-                    print(f"File {logo_path} not found. Skipping.")
-                except SyntaxError:
-                    print(f"File {logo_path} is not a valid PNG. Skipping.")
+            if num_motifs <= 5:
+                fig, axes = plt.subplots(1, num_motifs, figsize=(num_motifs * 4, 4))
+                if num_motifs == 1:
+                    axes = [axes]
+                for ax, logo_path in zip(axes, image_paths):
+                    try:
+                        img = mpimg.imread(logo_path)
+                        ax.imshow(img)
+                        ax.axis("off")
+                        motif_name = os.path.basename(logo_path).replace(".png", "")
+                        ax.set_title(motif_name)
+                    except FileNotFoundError:
+                        print(f"File {logo_path} not found. Skipping.")
+                    except SyntaxError:
+                        print(f"File {logo_path} is not a valid PNG. Skipping.")
+            else:
+                rows = (
+                    num_motifs + 4
+                ) // 5  # Calculate how many rows are needed for 5 logos per row
+                cols = min(num_motifs, 5)  # Use up to 5 columns
+                fig, axes = plt.subplots(rows, cols, figsize=(cols * 4, rows * 4))
+                axes = axes.flatten() if rows > 1 else [axes]  # Flatten if necessary
+                for ax in axes:
+                    ax.axis("off")  # Hide all axes by default
+                for ax, logo_path in zip(axes, image_paths):
+                    try:
+                        img = mpimg.imread(logo_path)
+                        ax.imshow(img)
+                        ax.axis("off")  # Only show axes for images
+                        motif_name = os.path.basename(logo_path).replace(".png", "")
+                        ax.set_title(motif_name)
+                    except FileNotFoundError:
+                        print(f"File {logo_path} not found. Skipping.")
+                    except SyntaxError:
+                        print(f"File {logo_path} is not a valid PNG. Skipping.")
 
             plt.tight_layout()
             cluster_graph_path = os.path.join(cluster_dir, f"cluster_{i}.png")
@@ -53,29 +72,36 @@ class MotifGraphGenerator:
         return all_cluster_paths
 
     def generate_final_composite_graph(self, all_cluster_paths):
-        total_clusters = len(all_cluster_paths)
-        final_fig, final_axes = plt.subplots(
-            total_clusters, 1, figsize=(8, total_clusters * 4)
-        )
+        composite_index = 1
+        for i in range(0, len(all_cluster_paths), 5):
+            sub_paths = all_cluster_paths[i : i + 5]
+            rows = len(sub_paths)
+            fig, axes = plt.subplots(rows, 1, figsize=(8, rows * 4))
 
-        if total_clusters == 1:
-            final_axes = [final_axes]
+            if rows == 1:
+                axes = [axes]
 
-        for ax, cluster_graph_path in zip(final_axes, all_cluster_paths):
-            try:
-                cluster_img = mpimg.imread(cluster_graph_path)
-                ax.imshow(cluster_img)
-                ax.axis("off")
-                cluster_name = os.path.basename(cluster_graph_path).replace(".png", "")
-                ax.set_title(cluster_name)
-            except FileNotFoundError:
-                print(f"File {cluster_graph_path} not found. Skipping.")
-            except SyntaxError:
-                print(f"File {cluster_graph_path} is not a valid PNG. Skipping.")
+            for ax, cluster_graph_path in zip(axes, sub_paths):
+                try:
+                    cluster_img = mpimg.imread(cluster_graph_path)
+                    ax.imshow(cluster_img)
+                    ax.axis("off")
+                    cluster_name = os.path.basename(cluster_graph_path).replace(
+                        ".png", ""
+                    )
+                    ax.set_title(cluster_name)
+                except FileNotFoundError:
+                    print(f"File {cluster_graph_path} not found. Skipping.")
+                except SyntaxError:
+                    print(f"File {cluster_graph_path} is not a valid PNG. Skipping.")
 
-        plt.tight_layout()
-        final_composite_path = os.path.join(self.base_dir, "final_composite.png")
-        plt.savefig(final_composite_path, dpi=600)
-        plt.close(final_fig)
+            plt.tight_layout()
+            final_composite_path = os.path.join(
+                self.base_dir, f"final_composite_{composite_index}.png"
+            )
+            plt.savefig(final_composite_path, dpi=600)
+            plt.close(fig)
 
-        print("Final composite graph has been generated and saved.")
+            composite_index += 1  # Increment the file index for each composite
+
+        print("All final composite graphs have been generated and saved.")
