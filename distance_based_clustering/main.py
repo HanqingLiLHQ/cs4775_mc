@@ -16,6 +16,9 @@ from evaluate import ari_score
 from evaluate import fmi_score
 from evaluate import nmi_score
 from evaluate import graph
+from evaluate import motif_graph
+from evaluate import cluster_graph
+from evaluate import final_graph
 
 
 ################################################################################
@@ -82,6 +85,10 @@ dataset = dataset_yeast_mini.DNABindingMotifs()
 print(dataset.mmm)
 print("Finish printing dataset \n")
 
+base_dir_motifs = "motifs_graphs"
+motif_generator = motif_graph.MotifGraphGenerator(dataset.mmm, base_dir_motifs)
+motif_generator.generate_motif_graphs()
+
 dm, idlist = dist_from_col.calculate_distance_matrix(
     dataset, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
 )
@@ -91,15 +98,23 @@ dataset_cc = dataset.cc
 print(dataset_cc)
 print("Finish printing dataset cc \n")
 
-base_dir = "nature_clusters"
-generator = graph.MotifGraphGenerator(dataset_cc, base_dir)
-cluster_paths = generator.generate_cluster_graphs()
-generator.generate_final_composite_graph(cluster_paths)
-
 # Convert dataset_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
 dataset_cc_list = [[key for key in d] for d in dataset_cc]
 print(dataset_cc_list)
 print("Finish printing dataset cc list \n")
+
+# base_dir = "nature_clusters"
+# generator = graph.MotifGraphGenerator(dataset_cc, base_dir)
+# cluster_paths = generator.generate_cluster_graphs()
+# generator.generate_final_composite_graph(cluster_paths)
+
+# For clusters of motifs
+base_dir_clusters = "nature_clusters"
+cluster_generator = cluster_graph.ClusterGraphGenerator(
+    dataset_cc_list, base_dir_motifs, base_dir_clusters
+)
+cluster_paths = cluster_generator.generate_cluster_graphs()
+final_graph.generate_final_composite_graph(base_dir_clusters, cluster_paths)
 
 # K-means clustering
 # One advantage of K-means is it can customize number of clusters needed
@@ -111,15 +126,21 @@ clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm, idl
 print(clusters)
 print("Finish printing result by K-means \n")
 
-our_cluster = create_cluster_dicts(clusters, dataset)
+# our_cluster = create_cluster_dicts(clusters, dataset)
 
-print(our_cluster)
-print("Finish printing our cluster \n")
+# print(our_cluster)
+# print("Finish printing our cluster \n")
 
-base_dir_our = "predicted_clusters"
-generator_our = graph.MotifGraphGenerator(our_cluster, base_dir_our)
-cluster_paths_our = generator_our.generate_cluster_graphs()
-generator_our.generate_final_composite_graph(cluster_paths_our)
+base_dir_clusters_our = "predicted_clusters"
+cluster_generator_our = cluster_graph.ClusterGraphGenerator(
+    clusters, base_dir_motifs, base_dir_clusters_our
+)
+cluster_paths_our = cluster_generator_our.generate_cluster_graphs()
+
+# base_dir_our = "predicted_clusters"
+# generator_our = graph.MotifGraphGenerator(our_cluster, base_dir_our)
+# cluster_paths_our = generator_our.generate_cluster_graphs()
+# generator_our.generate_final_composite_graph(cluster_paths_our)
 
 
 # clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
@@ -151,6 +172,10 @@ dataset2 = fungi_mini.DNABindingMotifs()
 print(dataset2.mmm)
 print("Finish printing dataset2 \n")
 
+base_dir_motifs2 = "motifs_graphs2"
+motif_generator2 = motif_graph.MotifGraphGenerator(dataset2.mmm, base_dir_motifs2)
+motif_generator2.generate_motif_graphs()
+
 dm2, idlist2 = dist_from_col.calculate_distance_matrix(
     dataset2, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
 )
@@ -159,15 +184,25 @@ dataset2_cc = dataset2.cc
 print(dataset2_cc)
 print("Finish printing dataset2 cc \n")
 
-base_dir2 = "nature_clusters2"
-generator2 = graph.MotifGraphGenerator(dataset2_cc, base_dir2)
-cluster_paths2 = generator2.generate_cluster_graphs()
-generator2.generate_final_composite_graph(cluster_paths2)
+# base_dir2 = "nature_clusters2"
+# generator2 = graph.MotifGraphGenerator(dataset2_cc, base_dir2)
+# cluster_paths2 = generator2.generate_cluster_graphs()
+# generator2.generate_final_composite_graph(cluster_paths2)
+
 
 # Convert dataset2_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
 dataset2_cc_list = [[key for key in d] for d in dataset2_cc]
 print(dataset2_cc_list)
 print("Finish printing dataset2 cc list \n")
+
+# For clusters of motifs
+base_dir_clusters2 = "nature_clusters2"
+cluster_generator2 = cluster_graph.ClusterGraphGenerator(
+    dataset2_cc_list, base_dir_motifs2, base_dir_clusters2
+)
+cluster_paths2 = cluster_generator2.generate_cluster_graphs()
+final_graph.generate_final_composite_graph(base_dir_clusters2, cluster_paths2)
+
 
 # Hierarchical clustering
 # clusters = hierarchical_clustering.hierarchical_clustering(5, dm, idlist)
@@ -182,12 +217,20 @@ clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, 
 # clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 print(clusters2)
 print("Finish printing result by K-means \n")
-our_cluster2 = create_cluster_dicts(clusters2, dataset2)
 
-base_dir_our2 = "predicted_clusters2"
-generator_our2 = graph.MotifGraphGenerator(our_cluster2, base_dir_our2)
-cluster_paths_our2 = generator_our2.generate_cluster_graphs()
-generator_our2.generate_final_composite_graph(cluster_paths_our2)
+base_dir_clusters_our2 = "predicted_clusters2"
+cluster_generator_our2 = cluster_graph.ClusterGraphGenerator(
+    clusters2, base_dir_motifs2, base_dir_clusters_our2
+)
+cluster_paths_our2 = cluster_generator_our2.generate_cluster_graphs()
+final_graph.generate_final_composite_graph(base_dir_clusters_our2, cluster_paths_our2)
+
+
+# our_cluster2 = create_cluster_dicts(clusters2, dataset2)
+# base_dir_our2 = "predicted_clusters2"
+# generator_our2 = graph.MotifGraphGenerator(our_cluster2, base_dir_our2)
+# cluster_paths_our2 = generator_our2.generate_cluster_graphs()
+# generator_our2.generate_final_composite_graph(cluster_paths_our2)
 
 
 dataset2_dic = dict(sorted(generate_labels_from_clusters(dataset2_cc_list).items()))
@@ -215,6 +258,11 @@ dataset3 = fungi.DNABindingMotifs()
 print(dataset3.mmm)
 print("Finish printing dataset3 \n")
 
+base_dir_motifs3 = "motifs_graphs3"
+motif_generator3 = motif_graph.MotifGraphGenerator(dataset3.mmm, base_dir_motifs3)
+motif_generator3.generate_motif_graphs()
+
+
 dm3, idlist3 = dist_from_col.calculate_distance_matrix(
     dataset3, Euclidean_Distance, "expand", bg=[0.27, 0.23, 0.23, 0.27], average=np.mean
 )
@@ -223,15 +271,23 @@ dataset3_cc = dataset3.cc
 print(dataset3_cc)
 print("Finish printing dataset3 cc \n")
 
-base_dir3 = "nature_clusters3"
-generator3 = graph.MotifGraphGenerator(dataset3_cc, base_dir3)
-cluster_paths3 = generator3.generate_cluster_graphs()
-generator3.generate_final_composite_graph(cluster_paths3)
+# base_dir3 = "nature_clusters3"
+# generator3 = graph.MotifGraphGenerator(dataset3_cc, base_dir3)
+# cluster_paths3 = generator3.generate_cluster_graphs()
+# generator3.generate_final_composite_graph(cluster_paths3)
 
 # Convert dataset3_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
 dataset3_cc_list = [[key for key in d] for d in dataset3_cc]
 print(dataset3_cc_list)
 print("Finish printing dataset3 cc list \n")
+
+# For clusters of motifs
+base_dir_clusters3 = "nature_clusters3"
+cluster_generator3 = cluster_graph.ClusterGraphGenerator(
+    dataset3_cc_list, base_dir_motifs3, base_dir_clusters3
+)
+cluster_paths3 = cluster_generator3.generate_cluster_graphs()
+final_graph.generate_final_composite_graph(base_dir_clusters3, cluster_paths3)
 
 
 num_clusters3 = len(dataset3_cc_list)  # Define the number of clusters
@@ -242,16 +298,23 @@ cluster3 = hierarchical_clustering.hierarchical_clustering(num_clusters3, dm3, i
 print(cluster3)
 print("Finish printing result by hierarchical clustering \n")
 
+base_dir_clusters_our3 = "predicted_clusters3"
+cluster_generator_our3 = cluster_graph.ClusterGraphGenerator(
+    cluster3, base_dir_motifs3, base_dir_clusters_our3
+)
+cluster_paths_our3 = cluster_generator_our3.generate_cluster_graphs()
+final_graph.generate_final_composite_graph(base_dir_clusters_our3, cluster_paths_our3)
+
 # cluster2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 # print(cluster2)
 # print("Finish printing result by K means \n")
 
-our_cluster3 = create_cluster_dicts(cluster3, dataset3)
+# our_cluster3 = create_cluster_dicts(cluster3, dataset3)
 
-base_dir_our3 = "predicted_clusters3"
-generator_our3 = graph.MotifGraphGenerator(our_cluster3, base_dir_our3)
-cluster_paths_our3 = generator_our3.generate_cluster_graphs()
-generator_our3.generate_final_composite_graph(cluster_paths_our3)
+# base_dir_our3 = "predicted_clusters3"
+# generator_our3 = graph.MotifGraphGenerator(our_cluster3, base_dir_our3)
+# cluster_paths_our3 = generator_our3.generate_cluster_graphs()
+# generator_our3.generate_final_composite_graph(cluster_paths_our3)
 
 
 dataset3_dic = dict(sorted(generate_labels_from_clusters(dataset3_cc_list).items()))
