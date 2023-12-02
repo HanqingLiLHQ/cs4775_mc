@@ -122,9 +122,10 @@ num_clusters = len(dataset_cc_list)  # Define the number of clusters
 print(num_clusters)
 print("Finish printing num_clusters \n")
 
-clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm, idlist)
+# distance_update can be one of ["complete","single","UPGMA","WPGMA"]
+clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm, idlist, distance_update = "complete")
 print(clusters)
-print("Finish printing result by K-means \n")
+print("Finish printing result by Hierarchical Clustering \n")
 
 # our_cluster = create_cluster_dicts(clusters, dataset)
 
@@ -213,10 +214,11 @@ num_clusters2 = len(dataset2_cc_list)  # Define the number of clusters
 print(num_clusters2)
 print("Finish printing num_clusters2 \n")
 
-clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2)
+# distance_update can be one of ["complete","single","UPGMA","WPGMA"]
+clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2, distance_update = "complete")
 # clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 print(clusters2)
-print("Finish printing result by K-means \n")
+print("Finish printing result by Hierarchical Clustering \n")
 
 base_dir_clusters_our2 = "predicted_clusters2"
 cluster_generator_our2 = cluster_graph.ClusterGraphGenerator(
@@ -294,7 +296,8 @@ num_clusters3 = len(dataset3_cc_list)  # Define the number of clusters
 print(num_clusters3)
 print("Finish printing num_clusters3 \n")
 
-cluster3 = hierarchical_clustering.hierarchical_clustering(num_clusters3, dm3, idlist3)
+# distance_update can be one of ["complete","single","UPGMA","WPGMA"]
+cluster3 = hierarchical_clustering.hierarchical_clustering(num_clusters3, dm3, idlist3, distance_update = "complete")
 print(cluster3)
 print("Finish printing result by hierarchical clustering \n")
 
