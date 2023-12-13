@@ -24,16 +24,18 @@ def Pearson_CC_Distance(col1, col2):
       Evaluate the Pearson correlation coefficient between two columns of the probability probability matrix (column sum = 1)
       Return 1 - PCC as a distance measurement. 
       The 0.25 in the implementation referes to the average value of the four entries in a vector
-      col1, col2: a 4-dimension vector, the probabilities sum up to 1
+      col1, col2: a 4-dimension vector, the probabilities sum up to 1.
+      The pseudocount for the average entry values ensures that we do not have 0 as 
+      denominator. 
     """
     col1 = np.array(col1)
     col2 = np.array(col2)
     # Precondition check
     assert math.isclose(col1.sum(),1)
     assert math.isclose(col2.sum(),1)
-    numerator = np.sum((col1 - 0.25) * (col2 - 0.25))
-    denominator = np.sqrt(np.sum((col1 - 0.25) ** 2)
-                          * np.sum((col2 - 0.25) ** 2))
+    numerator = np.sum((col1 - 0.25000001) * (col2 - 0.25000001))
+    denominator = np.sqrt(np.sum((col1 - 0.25000001) ** 2)
+                          * np.sum((col2 - 0.25000001) ** 2))
     return 1 - numerator / denominator
 
 
