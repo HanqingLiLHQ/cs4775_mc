@@ -16,57 +16,15 @@ from hmm_clustering.motifdata import Mtf
 
 #EVERYTHING IN THE ORDER OF A-C-G-T!
 
-'''
-  Computes the distance between two mtf objects using the euclidian method.
-
-  Input:
-  mtf1, mtf2: Mtf objects
-  returns:
-  dist: float representing the calculated distance
-'''
-def eulc_mtf_distcalc(mtf1: Mtf, mtf2: Mtf):
-  ppm1 = mtf1.get_cols()
-  ppm2 = mtf2.get_cols()
-  """ Offset Position? Yes-int, No-None"""
-  return mtfdis.distance(coldis.Euclidean_Distance, ppm1, ppm2, "expand")
 
 '''
-TOCHANGE
   Computes the distance between all pairs of matrices and print them out.
 
   Input:
   mtf_dict: dictionaries of all the Motifs in Mtf format, with key=id
     and value=Mtf object
   returns:
-  TOCHANGE
-'''
-def greedyclustemp(mtf_dict):
-    results = []
-
-    keys = list(mtf_dict.keys())
-
-    for i in range(len(keys)):
-        for j in range(i + 1, len(keys)):
-            id1, id2 = keys[i], keys[j]
-            mtf1, mtf2 = mtf_dict[id1], mtf_dict[id2]
-
-            distance = eulc_mtf_distcalc(mtf1, mtf2)
-
-            result_str = f"id1={id1}, id2={id2}, dist={distance}"
-            print(result_str)
-            results.append(result_str)
-
-    return "\n".join(results)
-
-'''
-TOCHANGE
-  Computes the distance between all pairs of matrices and print them out.
-
-  Input:
-  mtf_dict: dictionaries of all the Motifs in Mtf format, with key=id
-    and value=Mtf object
-  returns:
-  TOCHANGE
+  clusters: dictionary of int-(cols, [ids], [Mtfs])
 '''
 def greedyclus(thresh, mtf_dict):
   assert len(mtf_dict) != 0
@@ -81,14 +39,16 @@ def greedyclus(thresh, mtf_dict):
     clus = -1
     min_dist = -1
     curr_clus = 0
+    curr_offset = None
     # test distance on the new matrix candidate to each existing clusters
     for (cols, ids, mtfs) in clusters.values():
-      temp_dist = mtfdis.distance(coldis.Euclidean_Distance, cols, mtf_dict[curr_mtx_id].get_cols(), "expand")
+      (temp_dist, temp_offset) = mtfdis.distance_offset(coldis.Euclidean_Distance, cols, mtf_dict[curr_mtx_id].get_cols(), "expand")
       # attempts to find minimum distance smaller than threshold value
       if temp_dist <= threshold and (clus == -1 or temp_dist <= min_dist):
         clus = curr_clus
         min_dist = temp_dist
-      curr_clus += 1
+        curr_offset = temp_offset
+        curr_clus += 1
 
     # no distance under threshold was found-create new cluster
     if clus == -1:
@@ -98,11 +58,13 @@ def greedyclus(thresh, mtf_dict):
     else:
        target_cluster = clusters[clus]
        modified_ids = target_cluster[1] + [curr_mtx_id]
-       modified_mtfs = target_cluster[2] + [mtf_dict[curr_mtx_id]]
+       preoffset_mtf = mtf_dict[curr_mtx_id]
+       # modified_mtfs = target_cluster[2] + [mtf_dict[curr_mtx_id]]
+       modified_mtfs = offsetfix(curr_offset, target_cluster[2], mtf_dict[curr_mtx_id])
        modified_cols = calculate_mean_vectors([mymtf.get_cols() for mymtf in modified_mtfs])
        clusters[clus] = (modified_cols, modified_ids, modified_mtfs)
     curr_mtx_id += 1
-  print(clusters)
+  #print(clusters)
   return clusters
 
 """
@@ -124,19 +86,43 @@ def calculate_mean_vectors(cols_list):
       pm = np.pad(cols, ((0, num_rows_to_append), (0, 0)), mode='constant', constant_values=0)
       padded_colist.append(pm)
       padded_cols = np.array(padded_colist)
-    # print(padded_cols)
     for i in range(max_length):
       cols_array = []
       for padcols in padded_cols:
           if any(padcols[i] != 0):
             cols_array.append(padcols[i])
-      """ USE COUNT MATRIX????
-       ALIGNNMENT?"""
       newcols_list.append(np.mean(cols_array, axis=0))
     newcols = np.array(newcols_list)
-    # print("newcols = "+str(newcols))
     return newcols
 
+
+"""
+Helper function for aligning the new input motif according to given offset.
+
+Input:
+offset: Offset Position? Yes-int, No-None
+mtfs: list of Mtf objects
+newmtf: new mtf object for input
+Output:
+fixedmtfs: list of Mtf objects with fixated cols
+"""
+def offsetfix(offset, mtfs, newmtf):
+   if offset == None or offset == 0:
+      return mtfs + [newmtf]
+   # [0, len(motif1)) and [offset, len(motif2) + offset)]
+   elif offset > 1:
+      prealigned_cols = newmtf.get_cols()
+      zeros_array = np.zeros_like(prealigned_cols[:1])
+      aligned_cols = np.vstack([zeros_array] * offset + [prealigned_cols])
+      newmtf.set_cols(aligned_cols)
+      return mtfs + [newmtf]
+   else:
+      for tempmtf in mtfs:
+         prealigned_cols = tempmtf.get_cols()
+         zeros_array = np.zeros_like(prealigned_cols[:1])
+         aligned_cols = np.vstack([zeros_array] * offset * -1 + [prealigned_cols])
+         tempmtf.set_cols(aligned_cols)
+      return mtfs + [newmtf]
 
        
 
