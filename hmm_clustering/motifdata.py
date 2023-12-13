@@ -17,9 +17,20 @@ import numpy as np
 class Mtf():
   mtf = None
   id = None
+  mycols = None
   def __init__(self, mtf, id):
       self.mtf = mtf
       self.id = id
+      a = self.mtf.counts.get('A')
+      t = self.mtf.counts.get('T')
+      c = self.mtf.counts.get('C')
+      g = self.mtf.counts.get('G')
+
+      # Assuming all a, t, c, g have the same length
+      cols = np.array([a, c, g, t]).T  # Transpose to get columns
+
+      cols_normalized = np.apply_along_axis(lambda x: x / np.sum(x), axis=1, arr=cols)
+      self.mycols = cols_normalized
     
   """
   Returns power weight matrix of a motif object
@@ -49,19 +60,17 @@ class Mtf():
     up to 1, that represents the probability of A,C,G,T respectively.
   """
   def get_cols(self):
-    a = self.mtf.counts.get('A')
-    t = self.mtf.counts.get('T')
-    c = self.mtf.counts.get('C')
-    g = self.mtf.counts.get('G')
-
-    # Assuming all a, t, c, g have the same length
-    cols = np.array([a, c, g, t]).T  # Transpose to get columns
-
-    cols_normalized = np.apply_along_axis(lambda x: x / np.sum(x), axis=1, arr=cols)
-
-    return cols_normalized
+    return self.mycols
   
-    """
+  """
+  Resets the cols object
+  Input: 
+  cols: np.array object for resetting cols
+  """
+  def set_cols(self, cols):
+    self.mycols = cols
+  
+  """
   Returns all the columns of the pwm of a Mtf object in a list
 
   returns:
