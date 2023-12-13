@@ -18,9 +18,11 @@ class Mtf():
   mtf = None
   id = None
   mycols = None
-  def __init__(self, mtf, id):
+  mylabel = None
+  def __init__(self, mtf, id, label):
       self.mtf = mtf
       self.id = id
+      self.mylabel = label
       a = self.mtf.counts.get('A')
       t = self.mtf.counts.get('T')
       c = self.mtf.counts.get('C')
@@ -42,6 +44,26 @@ class Mtf():
   """
   def get_pwm(self):
       return self.mtf.pwm
+  
+  """
+  Returns power weight matrix of a motif object
+  pwms are power weight matrices that stored as dictionaries with 
+    keys 'A', 'C', 'G', 'T' and values as tuples.
+
+  returns:
+  pwm: pwm is a dictionary; pwm.get('A') gives back a very long tuple.
+  """
+  def get_mtf(self):
+      return self.mtf
+  
+  """
+  Returns label of a matrix
+
+  returns:
+  label: the label
+  """
+  def get_label(self):
+      return self.mylabel
   
   """
   Returns id of a Mtf object

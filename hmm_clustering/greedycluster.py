@@ -64,7 +64,7 @@ def greedyclus(thresh, mtf_dict):
        modified_cols = calculate_mean_vectors([mymtf.get_cols() for mymtf in modified_mtfs])
        clusters[clus] = (modified_cols, modified_ids, modified_mtfs)
     curr_mtx_id += 1
-  print(clusters)
+  #print(clusters)
   return clusters
 
 """

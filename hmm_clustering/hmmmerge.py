@@ -151,7 +151,7 @@ Output:
 def hmm_scoring_align(ppm1, ppm2):
    (longppm, shortppm) = arrange_ppm(ppm1, ppm2)
    offset = len(longppm) - len(shortppm)
-   alignment = None
+   l = None
    minscore = float("inf")
    bestoffset = -1
    for i in range(offset + 1):
@@ -162,3 +162,101 @@ def hmm_scoring_align(ppm1, ppm2):
          bestoffset = i
          l = myalignment
    return minscore, bestoffset, l
+
+
+"""
+  Merge two given clusters.
+Input:
+  clusters: naive clusters from greedyclustering, 
+    dictionary of int-(cols, [ids], [Mtfs])
+  offset: offset for merging alignments.
+  i1: the first key of the cluster for merging.
+  i2: the second key of the cluster for merging.
+Output:
+  merged_clusters: merged clusters, dictionary of 
+  int-(cols, [ids], [Mtfs])
+"""
+def merge(clusters, offset, i1, i2):
+    # Check if i1 and i2 are valid keys in the clusters dictionary
+    if i1 not in clusters or i2 not in clusters:
+        print("Invalid keys for merging.")
+        return clusters
+
+    # Extract information for the two clusters to be merged
+    cols1, ids1, mtfs1 = clusters[i1]
+    cols2, ids2, mtfs2 = clusters[i2]
+
+    # Merge information (you can customize this based on your requirements)
+    merged_ids = ids1 + ids2
+    merged_mtfs = offsetfix(offset, mtfs1, mtfs2)
+    merged_cols = greedy.calculate_mean_vectors([mymtf.get_cols() for mymtf in merged_mtfs])
+
+    # Create the merged cluster
+    merged_cluster = (merged_cols, merged_ids, merged_mtfs)
+
+    # Remove the old clusters from the dictionary
+    del clusters[i1]
+    del clusters[i2]
+
+    # Add the merged cluster to the dictionary with a new key (you may want to customize this key)
+    new_key = max(clusters.keys()) + 1
+    clusters[new_key] = merged_cluster
+
+    return clusters
+
+"""
+  Conduct step-wise merge based on _scoring_align.
+Input:
+  clusters: naive clusters from greedyclustering, 
+    dictionary of int-(cols, [ids], [Mtfs])
+Output:
+  clusters: finalized clusters for scoring
+"""
+def hmm_merge(clusters):
+   best_minscore = float("inf")
+   best_offset = None
+   best_l = []
+   key_list = list(clusters.keys())
+   ppm_list = [value[0] for value in clusters.values()]
+   id1 = -1
+   id2 = -1
+   for i in range(len(ppm_list)):
+      for j in range(i + 1, len(ppm_list)):
+         minscore, offset, l = hmm_scoring_align(ppm_list[i], ppm_list[j])
+         if minscore < best_minscore:
+            best_minscore = minscore
+            best_l = l
+            best_offset = offset
+            id1 = key_list[i]
+            id2 = key_list[j]
+   print("merging clusters with id " + str(id1)+" and "+str(id2)+" with score "+str(best_minscore)+" and HMM states "+str(best_l))
+   return merge(clusters, best_offset, id1, id2)
+
+"""
+Helper function for aligning the new input motif according to given offset.
+
+Input:
+offset: Offset Position? Yes-int, No-None
+mtfs1: list of Mtf objects
+mtfs2: list of Mtf objects
+Output:
+fixedmtfs: list of Mtf objects with fixated cols
+"""
+def offsetfix(offset, mtfs1, mtfs2):
+   if offset == None or offset == 0:
+      return mtfs1 + mtfs2
+   # [0, len(motif1)) and [offset, len(motif2) + offset)]
+   elif offset > 1:
+      for tempmtf in mtfs2:
+         prealigned_cols = tempmtf.get_cols()
+         zeros_array = np.zeros_like(prealigned_cols[:1])
+         aligned_cols = np.vstack([zeros_array] * offset * -1 + [prealigned_cols])
+         tempmtf.set_cols(aligned_cols)
+      return mtfs1 + mtfs2
+   else:
+      for tempmtf in mtfs1:
+         prealigned_cols = tempmtf.get_cols()
+         zeros_array = np.zeros_like(prealigned_cols[:1])
+         aligned_cols = np.vstack([zeros_array] * offset * -1 + [prealigned_cols])
+         tempmtf.set_cols(aligned_cols)
+      return mtfs1 + mtfs2
