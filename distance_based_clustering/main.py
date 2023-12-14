@@ -74,181 +74,216 @@ def create_cluster_dicts(clusters, dataset):
     return our_cluster
 
 
-################################################################################
+def most_similar_lists(A, B):
+    def similarity(list1, list2):
+        # Count common elements for similarity
+        return len(set(list1) & set(list2))
 
-# Dataset: yeast_mini
+    B_matched = []
+    B_used = [False] * len(B)  # Keep track of which lists in B have been used
 
-dataset = dataset_yeast_mini.DNABindingMotifs()
-# dataset.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
-# where each motif matrix can be retrieved by motif.pssm
+    for a in A:
+        max_similarity = -1
+        best_match_idx = -1
 
-print(dataset.mmm)
-print("Finish printing dataset \n")
+        for idx, b in enumerate(B):
+            if not B_used[idx]:
+                current_similarity = similarity(a, b)
+                if current_similarity > max_similarity:
+                    max_similarity = current_similarity
+                    best_match_idx = idx
 
-base_dir_motifs = "motifs_graphs"
-motif_generator = motif_graph.MotifGraphGenerator(dataset.mmm, base_dir_motifs)
-motif_generator.generate_motif_graphs()
+        B_matched.append(B[best_match_idx])
+        B_used[best_match_idx] = True  # Mark this list as used
 
-dm, idlist = dist_from_col.calculate_distance_matrix(
-    dataset, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
-)
-# dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
-
-dataset_cc = dataset.cc
-print(dataset_cc)
-print("Finish printing dataset cc \n")
-
-# Convert dataset_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
-dataset_cc_list = [[key for key in d] for d in dataset_cc]
-print(dataset_cc_list)
-print("Finish printing dataset cc list \n")
-
-# base_dir = "nature_clusters"
-# generator = graph.MotifGraphGenerator(dataset_cc, base_dir)
-# cluster_paths = generator.generate_cluster_graphs()
-# generator.generate_final_composite_graph(cluster_paths)
-
-# For clusters of motifs
-base_dir_clusters = "nature_clusters"
-cluster_generator = cluster_graph.ClusterGraphGenerator(
-    dataset_cc_list, base_dir_motifs, base_dir_clusters
-)
-cluster_paths = cluster_generator.generate_cluster_graphs()
-final_graph.generate_final_composite_graph(base_dir_clusters, cluster_paths)
-
-# K-means clustering
-# One advantage of K-means is it can customize number of clusters needed
-num_clusters = len(dataset_cc_list)  # Define the number of clusters
-print(num_clusters)
-print("Finish printing num_clusters \n")
-
-# distance_update can be one of ["complete","single","UPGMA","WPGMA"]
-clusters = hierarchical_clustering.hierarchical_clustering(num_clusters, dm, idlist, distance_update = "complete")
-print(clusters)
-print("Finish printing result by Hierarchical Clustering \n")
-
-# our_cluster = create_cluster_dicts(clusters, dataset)
-
-# print(our_cluster)
-# print("Finish printing our cluster \n")
-
-base_dir_clusters_our = "predicted_clusters"
-cluster_generator_our = cluster_graph.ClusterGraphGenerator(
-    clusters, base_dir_motifs, base_dir_clusters_our
-)
-cluster_paths_our = cluster_generator_our.generate_cluster_graphs()
-
-# base_dir_our = "predicted_clusters"
-# generator_our = graph.MotifGraphGenerator(our_cluster, base_dir_our)
-# cluster_paths_our = generator_our.generate_cluster_graphs()
-# generator_our.generate_final_composite_graph(cluster_paths_our)
+    return B_matched
 
 
-# clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
+def sort_sublists(A):
+    for sublist in A:
+        sublist.sort()
+    return A
 
 
-dataset_dic = dict(sorted(generate_labels_from_clusters(dataset_cc_list).items()))
-print(dataset_dic)
-print("Finish printing true labels \n")
+# ################################################################################
 
-clusters_dic = dict(sorted(generate_labels_from_clusters(clusters).items()))
-print(clusters_dic)
-print("Finish printing predicted labels \n")
+# # Dataset: yeast_mini
 
-true_labels = list(dataset_dic.values())
-predicted_labels = list(clusters_dic.values())
+# dataset = dataset_yeast_mini.DNABindingMotifs()
+# # dataset.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
+# # where each motif matrix can be retrieved by motif.pssm
 
-score_ari = ari_score.evaluate_clustering(true_labels, predicted_labels)
-score_fmi = fmi_score.evaluate_clustering(true_labels, predicted_labels)
-score_nmi = nmi_score.evaluate_clustering(true_labels, predicted_labels)
+# print(dataset.mmm)
+# print("Finish printing dataset \n")
 
+# base_dir_motifs = "motifs_graphs"
+# motif_generator = motif_graph.MotifGraphGenerator(dataset.mmm, base_dir_motifs)
+# motif_generator.generate_motif_graphs()
 
-################################################################################
+# dm, idlist = dist_from_col.calculate_distance_matrix(
+#     dataset, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
+# )
+# # dm, idlist = jensen_distance.calculate_distance_matrix(dataset)
 
-# Dataset: fungi_mini
+# dataset_cc = dataset.cc
+# print(dataset_cc)
+# print("Finish printing dataset cc \n")
 
-dataset2 = fungi_mini.DNABindingMotifs()
-# dataset2.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
+# # Convert dataset_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
+# dataset_cc_list = [[key for key in d] for d in dataset_cc]
+# print(dataset_cc_list)
+# print("Finish printing dataset cc list \n")
 
-print(dataset2.mmm)
-print("Finish printing dataset2 \n")
+# # base_dir = "nature_clusters"
+# # generator = graph.MotifGraphGenerator(dataset_cc, base_dir)
+# # cluster_paths = generator.generate_cluster_graphs()
+# # generator.generate_final_composite_graph(cluster_paths)
 
-base_dir_motifs2 = "motifs_graphs2"
-motif_generator2 = motif_graph.MotifGraphGenerator(dataset2.mmm, base_dir_motifs2)
-motif_generator2.generate_motif_graphs()
+# # For clusters of motifs
+# base_dir_clusters = "nature_clusters"
+# cluster_generator = cluster_graph.ClusterGraphGenerator(
+#     dataset_cc_list, base_dir_motifs, base_dir_clusters
+# )
+# cluster_paths = cluster_generator.generate_cluster_graphs()
+# final_graph.generate_final_composite_graph(base_dir_clusters, cluster_paths)
 
-dm2, idlist2 = dist_from_col.calculate_distance_matrix(
-    dataset2, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
-)
+# # K-means clustering
+# # One advantage of K-means is it can customize number of clusters needed
+# num_clusters = len(dataset_cc_list)  # Define the number of clusters
+# print(num_clusters)
+# print("Finish printing num_clusters \n")
 
-dataset2_cc = dataset2.cc
-print(dataset2_cc)
-print("Finish printing dataset2 cc \n")
-
-# base_dir2 = "nature_clusters2"
-# generator2 = graph.MotifGraphGenerator(dataset2_cc, base_dir2)
-# cluster_paths2 = generator2.generate_cluster_graphs()
-# generator2.generate_final_composite_graph(cluster_paths2)
-
-
-# Convert dataset2_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
-dataset2_cc_list = [[key for key in d] for d in dataset2_cc]
-print(dataset2_cc_list)
-print("Finish printing dataset2 cc list \n")
-
-# For clusters of motifs
-base_dir_clusters2 = "nature_clusters2"
-cluster_generator2 = cluster_graph.ClusterGraphGenerator(
-    dataset2_cc_list, base_dir_motifs2, base_dir_clusters2
-)
-cluster_paths2 = cluster_generator2.generate_cluster_graphs()
-final_graph.generate_final_composite_graph(base_dir_clusters2, cluster_paths2)
-
-
-# Hierarchical clustering
-# clusters = hierarchical_clustering.hierarchical_clustering(5, dm, idlist)
-# # resulting cluters after using clustering method
+# # distance_update can be one of ["complete","single","UPGMA","WPGMA"]
+# clusters = hierarchical_clustering.hierarchical_clustering(
+#     num_clusters, dm, idlist, distance_update="complete"
+# )
 # print(clusters)
+# print("Finish printing result by Hierarchical Clustering \n")
 
-num_clusters2 = len(dataset2_cc_list)  # Define the number of clusters
-print(num_clusters2)
-print("Finish printing num_clusters2 \n")
+# # our_cluster = create_cluster_dicts(clusters, dataset)
 
-# distance_update can be one of ["complete","single","UPGMA","WPGMA"]
-clusters2 = hierarchical_clustering.hierarchical_clustering(num_clusters2, dm2, idlist2, distance_update = "complete")
-# clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
-print(clusters2)
-print("Finish printing result by Hierarchical Clustering \n")
+# # print(our_cluster)
+# # print("Finish printing our cluster \n")
 
-base_dir_clusters_our2 = "predicted_clusters2"
-cluster_generator_our2 = cluster_graph.ClusterGraphGenerator(
-    clusters2, base_dir_motifs2, base_dir_clusters_our2
-)
-cluster_paths_our2 = cluster_generator_our2.generate_cluster_graphs()
-final_graph.generate_final_composite_graph(base_dir_clusters_our2, cluster_paths_our2)
+# base_dir_clusters_our = "predicted_clusters"
+# cluster_generator_our = cluster_graph.ClusterGraphGenerator(
+#     clusters, base_dir_motifs, base_dir_clusters_our
+# )
+# cluster_paths_our = cluster_generator_our.generate_cluster_graphs()
 
-
-# our_cluster2 = create_cluster_dicts(clusters2, dataset2)
-# base_dir_our2 = "predicted_clusters2"
-# generator_our2 = graph.MotifGraphGenerator(our_cluster2, base_dir_our2)
-# cluster_paths_our2 = generator_our2.generate_cluster_graphs()
-# generator_our2.generate_final_composite_graph(cluster_paths_our2)
+# # base_dir_our = "predicted_clusters"
+# # generator_our = graph.MotifGraphGenerator(our_cluster, base_dir_our)
+# # cluster_paths_our = generator_our.generate_cluster_graphs()
+# # generator_our.generate_final_composite_graph(cluster_paths_our)
 
 
-dataset2_dic = dict(sorted(generate_labels_from_clusters(dataset2_cc_list).items()))
-print(dataset2_dic)
-print("Finish printing true labels \n")
+# # clusters = kmeans_self_defined_dist.kmeans_motifs(dm, idlist, num_clusters)
 
-clusters2_dic = dict(sorted(generate_labels_from_clusters(clusters2).items()))
-print(clusters2_dic)
-print("Finish printing predicted labels \n")
 
-true_labels2 = list(dataset2_dic.values())
-predicted_labels2 = list(clusters2_dic.values())
+# dataset_dic = dict(sorted(generate_labels_from_clusters(dataset_cc_list).items()))
+# print(dataset_dic)
+# print("Finish printing true labels \n")
 
-score_ari2 = ari_score.evaluate_clustering(true_labels2, predicted_labels2)
-score_fmi2 = fmi_score.evaluate_clustering(true_labels2, predicted_labels2)
-score_nmi2 = nmi_score.evaluate_clustering(true_labels2, predicted_labels2)
+# clusters_dic = dict(sorted(generate_labels_from_clusters(clusters).items()))
+# print(clusters_dic)
+# print("Finish printing predicted labels \n")
+
+# true_labels = list(dataset_dic.values())
+# predicted_labels = list(clusters_dic.values())
+
+# score_ari = ari_score.evaluate_clustering(true_labels, predicted_labels)
+# score_fmi = fmi_score.evaluate_clustering(true_labels, predicted_labels)
+# score_nmi = nmi_score.evaluate_clustering(true_labels, predicted_labels)
+
+
+# ################################################################################
+
+# # Dataset: fungi_mini
+
+# dataset2 = fungi_mini.DNABindingMotifs()
+# # dataset2.mmm is a dictionary with format {"id": Bio.motifs.Motif object}
+
+# print(dataset2.mmm)
+# print("Finish printing dataset2 \n")
+
+# base_dir_motifs2 = "motifs_graphs2"
+# motif_generator2 = motif_graph.MotifGraphGenerator(dataset2.mmm, base_dir_motifs2)
+# motif_generator2.generate_motif_graphs()
+
+# dm2, idlist2 = dist_from_col.calculate_distance_matrix(
+#     dataset2, Euclidean_Distance, "expand", bg=[0.25, 0.25, 0.25, 0.25], average=np.mean
+# )
+
+# dataset2_cc = dataset2.cc
+# print(dataset2_cc)
+# print("Finish printing dataset2 cc \n")
+
+# # base_dir2 = "nature_clusters2"
+# # generator2 = graph.MotifGraphGenerator(dataset2_cc, base_dir2)
+# # cluster_paths2 = generator2.generate_cluster_graphs()
+# # generator2.generate_final_composite_graph(cluster_paths2)
+
+
+# # Convert dataset2_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
+# dataset2_cc_list = [[key for key in d] for d in dataset2_cc]
+# print(dataset2_cc_list)
+# print("Finish printing dataset2 cc list \n")
+
+# # For clusters of motifs
+# base_dir_clusters2 = "nature_clusters2"
+# cluster_generator2 = cluster_graph.ClusterGraphGenerator(
+#     dataset2_cc_list, base_dir_motifs2, base_dir_clusters2
+# )
+# cluster_paths2 = cluster_generator2.generate_cluster_graphs()
+# final_graph.generate_final_composite_graph(base_dir_clusters2, cluster_paths2)
+
+
+# # Hierarchical clustering
+# # clusters = hierarchical_clustering.hierarchical_clustering(5, dm, idlist)
+# # # resulting cluters after using clustering method
+# # print(clusters)
+
+# num_clusters2 = len(dataset2_cc_list)  # Define the number of clusters
+# print(num_clusters2)
+# print("Finish printing num_clusters2 \n")
+
+# # distance_update can be one of ["complete","single","UPGMA","WPGMA"]
+# clusters2 = hierarchical_clustering.hierarchical_clustering(
+#     num_clusters2, dm2, idlist2, distance_update="complete"
+# )
+# # clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
+# print(clusters2)
+# print("Finish printing result by Hierarchical Clustering \n")
+
+# base_dir_clusters_our2 = "predicted_clusters2"
+# cluster_generator_our2 = cluster_graph.ClusterGraphGenerator(
+#     clusters2, base_dir_motifs2, base_dir_clusters_our2
+# )
+# cluster_paths_our2 = cluster_generator_our2.generate_cluster_graphs()
+# final_graph.generate_final_composite_graph(base_dir_clusters_our2, cluster_paths_our2)
+
+
+# # our_cluster2 = create_cluster_dicts(clusters2, dataset2)
+# # base_dir_our2 = "predicted_clusters2"
+# # generator_our2 = graph.MotifGraphGenerator(our_cluster2, base_dir_our2)
+# # cluster_paths_our2 = generator_our2.generate_cluster_graphs()
+# # generator_our2.generate_final_composite_graph(cluster_paths_our2)
+
+
+# dataset2_dic = dict(sorted(generate_labels_from_clusters(dataset2_cc_list).items()))
+# print(dataset2_dic)
+# print("Finish printing true labels \n")
+
+# clusters2_dic = dict(sorted(generate_labels_from_clusters(clusters2).items()))
+# print(clusters2_dic)
+# print("Finish printing predicted labels \n")
+
+# true_labels2 = list(dataset2_dic.values())
+# predicted_labels2 = list(clusters2_dic.values())
+
+# score_ari2 = ari_score.evaluate_clustering(true_labels2, predicted_labels2)
+# score_fmi2 = fmi_score.evaluate_clustering(true_labels2, predicted_labels2)
+# score_nmi2 = nmi_score.evaluate_clustering(true_labels2, predicted_labels2)
 
 ################################################################################
 
@@ -280,6 +315,8 @@ print("Finish printing dataset3 cc \n")
 
 # Convert dataset3_cc into a list of lists, where each inner list contains the keys of the corresponding dictionary
 dataset3_cc_list = [[key for key in d] for d in dataset3_cc]
+dataset3_cc_list.reverse()
+dataset3_cc_list = sort_sublists(dataset3_cc_list)
 print(dataset3_cc_list)
 print("Finish printing dataset3 cc list \n")
 
@@ -297,13 +334,20 @@ print(num_clusters3)
 print("Finish printing num_clusters3 \n")
 
 # distance_update can be one of ["complete","single","UPGMA","WPGMA"]
-cluster3 = hierarchical_clustering.hierarchical_clustering(num_clusters3, dm3, idlist3, distance_update = "complete")
+cluster3 = hierarchical_clustering.hierarchical_clustering(
+    num_clusters3, dm3, idlist3, distance_update="complete"
+)
+cluster3 = sort_sublists(cluster3)
 print(cluster3)
 print("Finish printing result by hierarchical clustering \n")
 
+cluster3_match = most_similar_lists(dataset3_cc_list, cluster3)
+print(cluster3_match)
+print("Finish printing result by matching \n")
+
 base_dir_clusters_our3 = "predicted_clusters3"
 cluster_generator_our3 = cluster_graph.ClusterGraphGenerator(
-    cluster3, base_dir_motifs3, base_dir_clusters_our3
+    cluster3_match, base_dir_motifs3, base_dir_clusters_our3
 )
 cluster_paths_our3 = cluster_generator_our3.generate_cluster_graphs()
 final_graph.generate_final_composite_graph(base_dir_clusters_our3, cluster_paths_our3)
