@@ -20,7 +20,7 @@ pip install biopython
 pip install -U scikit-learn
 ```
 ```bash
-python -m pip install -U matplotlib
+pip install -U matplotlib
 ```
 
 Clone the repository to your local machine:
