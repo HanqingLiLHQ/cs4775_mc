@@ -2,7 +2,7 @@
 
 2 All datasets are in the dataset folder.
 
-3 The k-medoid clustering based on hierarhical clustering is in the kmeans_hier_init.py. The classic k-medoid clustering is in the kmeans_self_defined_dist.
+3 The k-medoid clustering based on hierarhical clustering is in the kmeans_hier_init.py. The classic k-medoid clustering is in the kmeans_self_defined_dist. The hierarchical clustering is in hierarchical_clustering.py.
 
 4 All distance methods is in column_distance.py
 
