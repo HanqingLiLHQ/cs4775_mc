@@ -52,6 +52,16 @@ Run this python module for visualizing the clusters formed by the clustering alg
 ```bash
 python3 cluster_graph.py
 ```
+It will output the following folders:
+- Motifs Graph: This folders contains motifs weblogos for JASPAR dataset fungi.
+
+- Nature Clusters: This folder contains JASPAR's clusters on dataset fungi.
+
+- Hierarchical Clusters: This folder contains graphing results for hierarchical clustering on dataset fungi.
+
+- Kmeans Clusters: This folder contains graphing results for kmeans clustering on dataset fungi.
+
+- HMM Clusters: This folder contains graphing results for hmm clustering on dataset fungi.
 
 ## Folders on Main
 
@@ -70,26 +80,6 @@ This folder contains all the methods we used for HMM Clustering
 ### Evaluation Folder
 
 This folder contains all the scoring methods and visualization tools we uesd for clustering results.
-
-### Motifs Graph Folder
-
-This folders contains motifs weblogos for JASPAR dataset fungi.
-
-### Nature Clusters Folder
-
-This folder contains JASPAR's clusters on dataset fungi.
-
-### Hierarchical Clusters Folder
-
-This folder contains graphing results for hierarchical clustering on dataset fungi.
-
-### Kmeans Clusters Folder
-
-This folder contains graphing results for kmeans clustering on dataset fungi.
-
-### HMM Clusters Folder
-
-This folder contains graphing results for hmm clustering on dataset fungi.
 
 ## Acknowledgements
 
