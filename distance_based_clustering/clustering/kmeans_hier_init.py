@@ -64,7 +64,7 @@ def shortest(dm):
                 ret = [key1, key2, dm[key1][key2]]
     return ret
 
-def tree_construction(dm, idlist, dc = "complete"):
+def tree_construction(dm, idlist, dc = "UPGMA"):
     """
     Returns a TreeNode object denoting the current tree
     Precondition: 
