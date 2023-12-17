@@ -20,8 +20,6 @@ git clone https://github.com/HanqingLiLHQ/cs4775_mc
 cd cs4775_mc
 ```
 
-Navigate to the desired notebook in the Jupyter Notebook interface that opens in your browser.
-
 ## Files on Main
 
 ### `motif_distance.ipynb`
