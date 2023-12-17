@@ -1,6 +1,6 @@
 # Comparison of Computational Methods for Removing Redundancy in Motif Identification Process
 
-This project provides Jupyter Notebooks for performing hierarchical clustering and k-means clustering on various biological datasets. It also includes python files to run (HMM) clustering, visualization of clusters, and distance calculations.
+This project provides Jupyter Notebooks and python files for performing hierarchical clustering and k-means clustering on various biological datasets, and runing (HMM) clustering, visualization of clusters, and distance calculations.
 
 ## Preparation
 
@@ -42,9 +42,16 @@ Each dataset has a dedicated code block. To switch between hierarchical and k-me
 
 Run this python module to perform HMM clustering specifically on the `fungi` dataset.
 
+```bash
+python3 hmm_clustering.py
+```
+
 ### `cluster_graph.py`
 
 Run this python module for visualizing the clusters formed by the clustering algorithms. 
+```bash
+python3 cluster_graph.py
+```
 
 ## Folders on Main
 
