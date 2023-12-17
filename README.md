@@ -46,43 +46,44 @@ Run this python module to perform HMM clustering specifically on the `fungi` dat
 
 Run this python module for visualizing the clusters formed by the clustering algorithms. 
 
-## Dataset Folder
+## Folders on Main
+
+### Dataset Folder
 
 This folder contains all the datasets we used for this project.
 
-## Distance_Based_Clustering Folder
+### Distance_Based_Clustering Folder
 
 This folder contains all the methods we used for hierarchical and k-means clustering.
 
-## HMM_Clustering Folder
+### HMM_Clustering Folder
 
 This folder contains all the methods we used for HMM Clustering
 
-## Evaluation Folder
+### Evaluation Folder
 
 This folder contains all the scoring methods and visualization tools we uesd for clustering results.
 
-## Motifs Graph Folder
+### Motifs Graph Folder
 
 This folders contains motifs weblogos for JASPAR dataset fungi.
 
-## Nature Clusters Folder
+### Nature Clusters Folder
 
 This folder contains JASPAR's clusters on dataset fungi.
 
-## Hierarchical Clusters Folder
+### Hierarchical Clusters Folder
 
 This folder contains graphing results for hierarchical clustering on dataset fungi.
 
-## Kmeans Clusters Folder
+### Kmeans Clusters Folder
 
 This folder contains graphing results for kmeans clustering on dataset fungi.
 
-## HMM Clusters Folder
+### HMM Clusters Folder
 
 This folder contains graphing results for hmm clustering on dataset fungi.
 
 ## Acknowledgements
 
 Thank you to all the contributors who have invested time in developing these clustering methods.
-
