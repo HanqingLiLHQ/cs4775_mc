@@ -2,7 +2,7 @@
 
 This project provides Jupyter Notebooks for performing hierarchical clustering and k-means clustering on various biological datasets. It also includes python files to run (HMM) clustering, visualization of clusters, and distance calculations.
 
-## Getting Started
+## Preparation
 
 To run the notebooks, ensure that you have Jupyter installed. If not, you can install it using pip:
 
@@ -17,15 +17,15 @@ git clone https://github.com/HanqingLiLHQ/cs4775_mc
 cd cs4775_mc
 ```
 
-Start the Jupyter Notebook server:
-
-```bash
-jupyter notebook
-```
-
 Navigate to the desired notebook in the Jupyter Notebook interface that opens in your browser.
 
-## Notebooks
+## Files on Main
+
+### `motif_distance.ipynb`
+
+Run distance calculations using this notebook. It contains the necessary functions and code blocks to process the datasets and compute distances.
+
+It was used to plot and compare different alignment methods and distance functions. Specific motifs were fetched from JASPAR, including similar ones, dissimilar ones, and gapped ones with different gap lengths. Among the functions implemented, "compare_distance" compares different position-wise distance calculation methods (used to plot figure 3 and 4 by comparing fetched motifs ppm1 and ppm2, ppm1 and ppm3, gapped_ppm1 and gapped_ppm2). "compare_align" compares the overlap and expand strategy for motif alignment, giving rise to figure 2 by comparing ppm1 and ppm2, ppm1 and ppm3.
 
 ### `distance_based_clustering.ipynb`
 
@@ -37,42 +37,51 @@ Use this notebook to run hierarchical and k-means clustering on the following da
 
 Each dataset has a dedicated code block. To switch between hierarchical and k-means clustering, comment out the code for the clustering algorithm you do not want to use, and uncomment the one you do.
 
-### `hmm_clustering.ipynb`
+### `hmm_clustering.py`
 
-Use this notebook to perform HMM clustering specifically on the `fungi` dataset.
+Run this python module to perform HMM clustering specifically on the `fungi` dataset.
 
-### `cluster_graph.ipynb`
+### `cluster_graph.py`
 
-This notebook is used for visualizing the clusters formed by the clustering algorithms. Open it after running one of the clustering notebooks to see the graphical representation of clusters.
+Run this python module for visualizing the clusters formed by the clustering algorithms. 
 
-### `motif_distance.ipynb`
+## Dataset Folder
 
-Run distance calculations using this notebook. It contains the necessary functions and code blocks to process the datasets and compute distances.
+This folder contains all the datasets we used for this project.
 
-## Usage
+## Distance_Based_Clustering Folder
 
-To use a notebook, simply open it in the Jupyter interface and run the cells in order. Adjust the code blocks for clustering as per the instructions in the notebook to perform different types of clustering.
+This folder contains all the methods we used for hierarchical and k-means clustering.
 
+## HMM_Clustering Folder
+
+This folder contains all the methods we used for HMM Clustering
+
+## Evaluation Folder
+
+This folder contains all the scoring methods and visualization tools we uesd for clustering results.
+
+## Motifs Graph Folder
+
+This folders contains motifs weblogos for JASPAR dataset fungi.
+
+## Nature Clusters Folder
+
+This folder contains JASPAR's clusters on dataset fungi.
+
+## Hierarchical Clusters Folder
+
+This folder contains graphing results for hierarchical clustering on dataset fungi.
+
+## Kmeans Clusters Folder
+
+This folder contains graphing results for kmeans clustering on dataset fungi.
+
+## HMM Clusters Folder
+
+This folder contains graphing results for hmm clustering on dataset fungi.
 
 ## Acknowledgements
 
 Thank you to all the contributors who have invested time in developing these clustering methods.
 
-```
-
-Replace `[URL to your GitHub repo]` with the actual URL of your repository and `[Your repository name]` with the name of your repository. Also, make sure to add the actual name of the license under which your project is released in place of `[LICENSE NAME]`. If you have a LICENSE file, link to it with markdown. 
-
-This README provides an overview of what each notebook does and how to use them, along with setup instructions.
-1. The main file to run the algorithm is distance_based_clustering.ipynb and hmm_clustering.py. You can run all four datasets in distance_based_clustering.ipynb, while you can only run the fungi dataset in hmm_clustering.py. It takes a lot of time to calculate the distance matrix of the vertebrate large dataset.
-
-2. All datasets are in the dataset folder.
-
-3. The k-medoid clustering based on hierarhical clustering is in the kmeans_hier_init.py. The classic k-medoid clustering is in the kmeans_self_defined_dist. The hierarchical clustering is in hierarchical_clustering.py.
-
-4. All distance methods is in column_distance.py
-
-5. ALl evaluation: Scoring and Visualization helper funtions is in the evaluate folder.
-
-6. If you generate logos of the motifs, they will be in the folder of this project. Folders named nature clusters are correct clustering. Folders named predicted clusters are the clustering result generated by the algorithm.
-
-The jupyter notebook "motif_distance.ipynb" was used to plot and compare different alignment methods and distance functions. Specific motifs were fetched from JASPAR, including similar ones, dissimilar ones, and gapped ones with different gap lengths. Among the functions implemented, "compare_distance" compares different position-wise distance calculation methods (used to plot figure 3 and 4 by comparing fetched motifs ppm1 and ppm2, ppm1 and ppm3, gapped_ppm1 and gapped_ppm2). "compare_align" compares the overlap and expand strategy for motif alignment, giving rise to figure 2 by comparing ppm1 and ppm2, ppm1 and ppm3.
