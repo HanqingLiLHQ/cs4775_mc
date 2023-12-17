@@ -8,6 +8,10 @@ import column_distance as coldis
 import motif_distance as mtfdis
 from hmm_clustering.motifdata import Mtf  
 import hmm_clustering.greedycluster as greedy
+import dataset.dbm as dbm
+import dataset.dataset_yeast_mini as yst
+import dataset.fungi_mini as fg
+import dataset.fungi as fg2
 
 #EVERYTHING IN THE ORDER OF A-C-G-T!
 
@@ -260,3 +264,48 @@ def offsetfix(offset, mtfs1, mtfs2):
          aligned_cols = np.vstack([zeros_array] * offset * -1 + [prealigned_cols])
          tempmtf.set_cols(aligned_cols)
       return mtfs1 + mtfs2
+   
+
+'''
+  Initializes data and returns motifs stored in Mtf object 
+
+  returns:
+  mtf_dict: dictionaries of all the Motifs in Mtf format, with key=id
+    and value=Mtf object
+'''
+def hmm_fin():
+    mtf_dict = {}
+    curr_id = 0
+    db_instance = fg2.DNABindingMotifs().mmm
+    # print(db_instance)
+    for i in db_instance:
+        temp_mtf = Mtf(mtf=db_instance[i], id=curr_id, label = i)
+        # pwm is a dictionary; j.pwm.get('A') gives back a very long tuple.
+        my_id = temp_mtf.get_id()
+        # print(temp_mtf.get_pwm())
+        # print(temp_mtf.get_cols())
+        mtf_dict[my_id] = temp_mtf
+        curr_id += 1
+    gddct = greedy.greedyclus(0, mtf_dict)
+    # print(gddct.keys())
+    #v1 = [[0.1,0.2,0.3,0.4],[0.1,0.2,0.3,0.4],[0.12,0.18,0.25,0.45],[0.1,0.2,0.3,0.4]]
+    #v2 = [[0.1,0.2,0.3,0.4],[0.1,0.2,0.3,0.4],[0.26,0.24,0.25,0.25],[0.12,0.18,0.25,0.45],[0.1,0.2,0.3,0.4]]
+    #v1a = np.array(v1)
+    #v2a = np.array(v2)
+    #print(hmm.hmm_scoring_align(v1a, v2a))
+
+
+    for i in range(113):
+        if len(gddct) == 2:
+            break
+        gddct = hmm_merge(gddct)
+        print(gddct.keys())
+
+
+    motif_list = []
+    mtf_list = [value[2] for value in gddct.values()]
+    for mtfclus in mtf_list:
+        motif_clus = [mtf.get_label() for mtf in mtfclus]
+        motif_list = motif_list + [motif_clus]
+    #print(motif_list)
+    return motif_list
