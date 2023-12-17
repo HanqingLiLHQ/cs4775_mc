@@ -80,22 +80,22 @@ It will output the following folders:
 
 ## Folders on Main
 
-### Dataset Folder
+### `Dataset`
 
 This folder contains all the datasets we used for this project.
 
-### Distance_Based_Clustering Folder
+### `Distance_Based_Clustering`
 
 This folder contains all the methods we used for hierarchical and k-means clustering.
 
-### HMM_Clustering Folder
+### `HMM_Clustering`
 
 This folder contains all the methods we used for HMM Clustering
 
-### Evaluation Folder
+### `Evaluation`
 
 This folder contains all the scoring methods and visualization tools we uesd for clustering results.
 
 ## Acknowledgements
 
-Thank you to all the contributors who have invested time in developing these clustering methods.
+Thanks to Hanqing Li, Esther Yu, Rainney Wan, Sicheng Ma, and Jingyu Xu for investing time in developing and analyzing these amazing clustering methods🥳🥳🥳🥳🥳.
