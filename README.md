@@ -4,13 +4,13 @@ This project provides Jupyter Notebooks and python files for performing hierarch
 
 ## Preparation
 
-To run the modules, ensure that you have Python(3.7 or later) and Biopython installed.
-
-
-To run the notebooks, ensure that you have Jupyter installed. If not, you can install it using pip:
+To run the modules and notebooks, ensure that you have Python(3.7 or later), Jupyter, and Biopython installed. If not, you can install python from their official website, and install Jupyter and Biopython using pip:
 
 ```bash
 pip install notebook
+```
+```bash
+pip install biopython
 ```
 
 Clone the repository to your local machine:
