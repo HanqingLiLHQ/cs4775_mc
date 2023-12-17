@@ -1,24 +1,25 @@
 import sys
 import numpy as np
+import os
 
-sys.path.insert(1, "../CS4775_MC")  # Add the parent directory to sys.path
-
-from hmm_clustering.motifdata import Mtf 
+hmm_clustering_path = os.path.join(os.getcwd(), "hmm_clustering")
+sys.path.insert(0, hmm_clustering_path)
+dataset_path = os.path.join(os.getcwd(), "dataset")
+sys.path.insert(0, dataset_path)
+from hmm_clustering.motifdata import Mtf
 import hmm_clustering.greedycluster as greedy
 import hmm_clustering.hmmmerge as hmm
 import dataset.dbm as dbm
 import dataset.dataset_yeast_mini as yst
 import dataset.fungi_mini as fg
 import dataset.fungi as fg2
-import main as scorer
 
 
-#EVERYTHING IN THE ORDER OF A-C-G-T!
+# EVERYTHING IN THE ORDER OF A-C-G-T!
 from sklearn.metrics import (
     fowlkes_mallows_score,
     adjusted_rand_score,
     normalized_mutual_info_score,
-
 )
 
 
@@ -34,9 +35,11 @@ Range: [0, 1]
 # indicates no agreement. 
 """
 
+
 def evaluate_clustering(true_labels, predicted_labels):
     fmi = fowlkes_mallows_score(true_labels, predicted_labels)
     print("Fowlkes-Mallows Index (FMI):", fmi)
+
 
 def evaluate_clustering_nmi(true_labels, predicted_labels):
     nmi = normalized_mutual_info_score(true_labels, predicted_labels)
@@ -47,6 +50,7 @@ def evaluate_clustering_nmi(true_labels, predicted_labels):
 def evaluate_clustering_ari(true_labels, predicted_labels):
     ari = adjusted_rand_score(true_labels, predicted_labels)
     print("Adjusted Rand Index (ARI):", ari)
+
 
 def generate_labels_from_clusters(clusters):
     """
@@ -100,7 +104,6 @@ clusters2 = hmm.hmm_fin()
 # clusters2 = kmeans_self_defined_dist.kmeans_motifs(dm2, idlist2, num_clusters2)
 print(clusters2)
 print("Finish printing result by HMM clustering \n")
-
 
 
 # our_cluster2 = create_cluster_dicts(clusters2, dataset2)
