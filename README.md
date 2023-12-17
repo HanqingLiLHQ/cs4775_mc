@@ -4,11 +4,11 @@ This project provides Jupyter Notebooks and python files for performing hierarch
 
 ## Preparation
 
-To run the modules and notebooks, ensure that you have Python(3.7 or later), Jupyter, biopython, matplotlib, and scikit-learn installed. If not:
+To run the modules and notebooks, ensure that you have Python(3.7 or later), Jupyter, biopython, matplotlib, numpy, scikit-learn (and maybe some other modules) installed. If not:
 You can install python from their official website: 
 `https://www.python.org/downloads/`
 
-You can install Jupyter, biopython, matplotlib and scikit-learn using pip:
+You can install Jupyter, biopython, matplotlib, scikit-learn (and some other modules) using pip:
 
 ```bash
 pip install notebook
@@ -17,10 +17,13 @@ pip install notebook
 pip install biopython
 ```
 ```bash
-pip install -U scikit-learn
+pip install -U matplotlib
 ```
 ```bash
-pip install -U matplotlib
+pip install numpy
+```
+```bash
+pip install -U scikit-learn
 ```
 
 Clone the repository to your local machine:
