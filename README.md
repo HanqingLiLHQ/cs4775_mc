@@ -98,4 +98,4 @@ This folder contains all the scoring methods and visualization tools we uesd for
 
 ## Acknowledgements
 
-Thanks to Hanqing Li, Esther Yu, Rainney Wan, Sicheng Ma, and Jingyu Xu for investing time in developing and analyzing these amazing clustering methods🥳🥳🥳🥳🥳.
+Thanks to Hanqing Li, Esther Yu, Rainney Wan, Sicheng Ma, and Jingyu Xu for investing time in developing and analyzing these amazing clustering methods🥳🥳🥳🥳🥳
