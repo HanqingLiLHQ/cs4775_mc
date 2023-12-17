@@ -4,6 +4,9 @@ This project provides Jupyter Notebooks for performing hierarchical clustering a
 
 ## Preparation
 
+To run the modules, ensure that you have Python(3.7 or later) and Biopython installed.
+
+
 To run the notebooks, ensure that you have Jupyter installed. If not, you can install it using pip:
 
 ```bash
