@@ -28,7 +28,7 @@ pip install numpy
 pip install -U scikit-learn
 ```
 
-Clone the repository to your local machine:
+Clone the repository to your local machine and get ready to run the project:
 
 ```bash
 git clone https://github.com/HanqingLiLHQ/cs4775_mc
