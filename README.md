@@ -1,4 +1,4 @@
-# Distance-Based Clustering Project
+# Comparison of Computational Methods for Removing Redundancy in Motif Identification Process
 
 This project provides Jupyter Notebooks for performing hierarchical clustering and k-means clustering on various biological datasets. It also includes python files to run (HMM) clustering, visualization of clusters, and distance calculations.
 
