@@ -36,7 +36,7 @@ cd cs4775_mc
 ```
 
 ## Files on Main
-### `FINAL REPORT.pdf`
+### `FINAL_REPORT.pdf`
 This is the final report for the project. It described the methods we used/developed for motif clustering, the results we got from these methods, and the discussion we had about each clustering method and its corresponding results. 
 
 ### `motif_distance.ipynb`
